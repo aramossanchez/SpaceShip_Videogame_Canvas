@@ -67,9 +67,19 @@ const dibujarnave = () =>{
     contexto.save()
     //BRILLO DE LA NAVE
     contexto.shadowBlur=35;
-    contexto.shadowOffsetX=0;
-    contexto.shadowOffsetY=0;
-    contexto.shadowColor="#FFFF00";
+    if (haciaArriba) {
+        contexto.shadowOffsetY=20;
+    }
+    if (haciaAbajo) {
+        contexto.shadowOffsetY=-20;
+    }
+    if (haciaIzquierda) {
+        contexto.shadowOffsetX=20;
+    }
+    if (haciaDerecha) {
+        contexto.shadowOffsetX=-20;
+    }
+    contexto.shadowColor="#FF0000";
     contexto.beginPath();
     //CAMBIA LA ORIENTACION DE LA NAVE
     if (haciaArriba) {
