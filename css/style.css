@@ -1,0 +1,19 @@
+/* 
+AUTOR: ARMANDO RAMOS SÁNCHEZ
+VERSION: 1.0
+*/
+*{
+    padding: 0;
+    margin: 0;
+}
+#container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+canvas{
+    background-color: blanchedalmond;
+}
