@@ -17,13 +17,16 @@ var cochePosicionY = canvas.height-cocheHeight;
 var cocheX = 0;
 var cocheY = canvas.height-cocheHeight;
 
-var movimientoX = 2;
-var movimientoY = -2;
+var velocidadX = 0;
+var velocidadY = 5;
 
 var izquierdaPulsado = false;
 var derechaPulsado = false;
 var arribaPulsado = false;
 var abajoPulsado = false;
+
+var haciaDerecha = true;
+var haciaIzquierda = false;
 
 //CREO COCHE
 const dibujarCoche = () =>{
@@ -75,17 +78,47 @@ const juego = () =>{
     //PINTAMOS COCHE
     dibujarCoche();
     //GESTIONAMOS MOVIMIENTO DEL COCHE
-    if(izquierdaPulsado && cocheX > 0){
-        cocheX -= 5;
+    if(izquierdaPulsado){
+        haciaIzquierda = true;
+        haciaDerecha = false;
+        if (velocidadX > -5){
+            velocidadX -= 0.25;
+        };
+        cocheX += velocidadX;
     };
+    if(!izquierdaPulsado && haciaIzquierda && cocheX > 0){
+        if (velocidadX < 0){
+            velocidadX += 0.25;
+        };
+        cocheX += velocidadX;
+    };
+    if(cocheX <= 0){
+        cocheX = 0;
+        velocidadX = 0;
+    }
     if(arribaPulsado && cocheY > 0){
-        cocheY -= 5;
+        cocheY -= velocidadY;
     };
     if(derechaPulsado && cocheX < canvas.width - cocheWidth){
-        cocheX += 5;
+        haciaDerecha = true;
+        haciaIzquierda = false;
+        if (velocidadX < 10){
+            velocidadX += 0.25;
+        }
+        cocheX += velocidadX;
     };
+    if(!derechaPulsado && haciaDerecha && cocheX < canvas.width - cocheWidth){
+        if (velocidadX > 0){
+            velocidadX -= 0.25;
+        }
+        cocheX += velocidadX;
+    };
+    if(cocheX >= canvas.width - cocheWidth){
+        cocheX = canvas.width - cocheWidth;
+        velocidadX = 0;
+    }
     if(abajoPulsado && cocheY < canvas.height-cocheHeight){
-        cocheY += 5;
+        cocheY += velocidadY;
     };
     //CUANDO LLAMEMOS A LA FUNCIÓN, SE EJECUTARÁ EN BUCLE CON LA TASA DE REFRESCOS MÁXIMA QUE SOPORTE EL NAVEGADOR
     requestAnimationFrame(juego)
