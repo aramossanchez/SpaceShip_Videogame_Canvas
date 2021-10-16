@@ -8,10 +8,10 @@ let canvas = document.getElementById("game");
 let contexto = canvas.getContext("2d");
 
 //CREO VARIABLES PARA LA NAVE
-var naveWidth = 35;
+var naveWidth = 45;
 var naveHeight = 45;
-var navePosicionX = 0;
-var navePosicionY = canvas.height-naveHeight;
+var naveX = 50;
+var naveY = 550;
 
 //TRAIGO IMAGEN DE LA NAVE
 var naveArriba = new Image();
@@ -39,13 +39,18 @@ var bordeArribaHeight = 15;
 var bordeAbajoWidth = canvas.width;
 var bordeAbajoHeight = 15;
 
+//CREAMOS VARIABLES PARA LOS OBSTACULOS
+var obstaculoUnoX = 200;
+var obstaculoUnoY = 300;
+var obstaculoUnoWidth = 25;
+var obstaculoUnoHeight = 300;
 
-//CREAMOS VARIABLES PARA EL MOVIMIENTO DEL nave
-var naveX = canvas.width/2 - naveWidth;
-var naveY = canvas.height/2 - naveHeight;
+//CREAMOS VARIABLES PARA EL MOVIMIENTO DE LA NAVE
 
 var velocidadX = 0;
 var velocidadY = 0;
+
+var disparoVelocidadY = 0;
 
 var izquierdaPulsado = false;
 var derechaPulsado = false;
@@ -57,7 +62,7 @@ var haciaIzquierda = false;
 var haciaArriba = true;
 var haciaAbajo = false;
 
-//CREO nave
+//CREO NAVE
 const dibujarnave = () =>{
     contexto.save()
     //BRILLO DE LA NAVE
@@ -91,6 +96,7 @@ const pintarBordes = () =>{
     contexto.fillStyle = "#005555";
     contexto.fill();
     contexto.closePath();
+
     contexto.beginPath();
     contexto.rect(0, 0, bordeArribaWidth, bordeArribaHeight);
     contexto.fillStyle = "#005555";
@@ -109,7 +115,21 @@ const pintarBordes = () =>{
     contexto.fill();
     contexto.closePath();
 }
-//CREAMOS EVENTOS PARA PULSACIÓN DE TECLAS Y MOVIMIENTO DE STICK
+
+const pintarObstaculo1 = () =>{
+    contexto.beginPath();
+    contexto.rect(obstaculoUnoX, obstaculoUnoY, obstaculoUnoWidth, obstaculoUnoHeight);
+    contexto.fillStyle = "#005555";
+    contexto.fill();
+    contexto.closePath();
+}
+
+const deteccionColision = () => {
+    if(naveX + naveHeight > obstaculoUnoX && naveX < obstaculoUnoX + obstaculoUnoWidth && naveY + naveHeight > obstaculoUnoY && naveY < obstaculoUnoY + obstaculoUnoHeight){
+        window.location.reload();
+    }
+}
+//CREAMOS EVENTOS PARA PULSACIÓN DE TECLAS Y MOVIMIENTO DE NAVE
 const pulsarTecla = (e) =>{
     if(e.keyCode == 37) {
         izquierdaPulsado = true;
@@ -151,8 +171,10 @@ const juego = () =>{
     dibujarnave();
     //PINTAMOS BORDES
     pintarBordes();
+    //PINTAMOS PRIMER OBSTACULO
+    pintarObstaculo1();
     //GESTIONAMOS MOVIMIENTO DE LA NAVE
-    
+
     //MOVIMIENTO HACIA LA IZQUIERDA
     if(izquierdaPulsado){
         haciaArriba = false;
@@ -224,9 +246,12 @@ const juego = () =>{
     if(naveY >= canvas.height-naveHeight-bordeAbajoHeight){
         naveY = canvas.height-naveHeight-bordeAbajoHeight;
         velocidadY = 0;
-    }
+    };
+
+    //COLISIONES
+    deteccionColision();
     //CUANDO LLAMEMOS A LA FUNCIÓN, SE EJECUTARÁ EN BUCLE CON LA TASA DE REFRESCOS MÁXIMA QUE SOPORTE EL NAVEGADOR
-    requestAnimationFrame(juego)
+    requestAnimationFrame(juego);
 
 };
 //INVOCAMOS LA FUNCION QUE GESTIONA EL FUNCIONAMIENTO DEL JUEGO
