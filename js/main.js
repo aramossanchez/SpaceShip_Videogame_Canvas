@@ -9,9 +9,22 @@ let contexto = canvas.getContext("2d");
 
 //CREO VARIABLES PARA LA NAVE
 var naveWidth = 35;
-var naveHeight = 35;
+var naveHeight = 45;
 var navePosicionX = 0;
 var navePosicionY = canvas.height-naveHeight;
+
+//TRAIGO IMAGEN DE LA NAVE
+var naveArriba = new Image();
+naveArriba.src = './img/naveArriba.png';
+
+var naveAbajo = new Image();
+naveAbajo.src = './img/naveAbajo.png';
+
+var naveIzquierda = new Image();
+naveIzquierda.src = './img/naveIzquierda.png';
+
+var naveDerecha = new Image();
+naveDerecha.src = './img/naveDerecha.png';
 
 //CREAMOS VARIABLES PARA LOS BORDES
 var bordeIzquierdaWidth = 15;
@@ -39,42 +52,60 @@ var derechaPulsado = false;
 var arribaPulsado = false;
 var abajoPulsado = false;
 
-var haciaDerecha = true;
+var haciaDerecha = false;
 var haciaIzquierda = false;
-var haciaArriba = false;
+var haciaArriba = true;
 var haciaAbajo = false;
 
 //CREO nave
 const dibujarnave = () =>{
+    contexto.save()
+    //BRILLO DE LA NAVE
+    contexto.shadowBlur=35;
+    contexto.shadowOffsetX=0;
+    contexto.shadowOffsetY=0;
+    contexto.shadowColor="#FFFF00";
     contexto.beginPath();
-    contexto.rect(naveX, naveY, naveWidth, naveHeight);
-    contexto.fillStyle = "#FF0000";
+    //CAMBIA LA ORIENTACION DE LA NAVE
+    if (haciaArriba) {
+        contexto.drawImage(naveArriba, naveX, naveY, naveWidth, naveHeight);
+    }
+    if (haciaAbajo) {
+        contexto.drawImage(naveAbajo, naveX, naveY, naveWidth, naveHeight);
+    }
+    if (haciaIzquierda) {
+        contexto.drawImage(naveIzquierda, naveX, naveY, naveHeight, naveWidth);
+    }
+    if (haciaDerecha) {
+        contexto.drawImage(naveDerecha, naveX, naveY, naveHeight, naveWidth);
+    }
+    contexto.fillStyle = "#AAAAAA";
     contexto.fill();
     contexto.closePath();
+    contexto.restore();
 }
 
 const pintarBordes = () =>{
     contexto.beginPath();
     contexto.rect(0, 0, bordeIzquierdaWidth, bordeIzquierdaHeight);
-    contexto.fillStyle = "#00FF00";
+    contexto.fillStyle = "#005555";
     contexto.fill();
     contexto.closePath();
-
     contexto.beginPath();
     contexto.rect(0, 0, bordeArribaWidth, bordeArribaHeight);
-    contexto.fillStyle = "#00FF00";
+    contexto.fillStyle = "#005555";
     contexto.fill();
     contexto.closePath();
 
     contexto.beginPath();
     contexto.rect(canvas.width - bordeDerechaWidth, 0, bordeDerechaWidth, bordeDerechaHeight);
-    contexto.fillStyle = "#00FF00";
+    contexto.fillStyle = "#005555";
     contexto.fill();
     contexto.closePath();
 
     contexto.beginPath();
     contexto.rect(0, canvas.height - bordeAbajoHeight, bordeAbajoWidth, bordeAbajoHeight);
-    contexto.fillStyle = "#00FF00";
+    contexto.fillStyle = "#005555";
     contexto.fill();
     contexto.closePath();
 }
@@ -124,6 +155,8 @@ const juego = () =>{
     
     //MOVIMIENTO HACIA LA IZQUIERDA
     if(izquierdaPulsado){
+        haciaArriba = false;
+        haciaAbajo = false;
         haciaIzquierda = true;
         haciaDerecha = false;
         if (velocidadX > -5){
@@ -170,8 +203,8 @@ const juego = () =>{
     if(!derechaPulsado){
         naveX += velocidadX;
     };
-    if(naveX >= canvas.width - naveWidth - bordeDerechaWidth){
-        naveX = canvas.width - naveWidth - bordeDerechaWidth;
+    if(naveX >= canvas.width - naveHeight - bordeDerechaWidth){
+        naveX = canvas.width - naveHeight - bordeDerechaWidth;
         velocidadX = 0;
     }
     //MOVIMIENTO HACIA ARRIBA
