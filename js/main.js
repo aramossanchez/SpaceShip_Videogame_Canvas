@@ -26,7 +26,7 @@ naveIzquierda.src = './img/naveIzquierda.png';
 var naveDerecha = new Image();
 naveDerecha.src = './img/naveDerecha.png';
 
-//CREAMOS VARIABLES PARA LOS BORDES
+//CREO VARIABLES PARA LOS BORDES
 var bordeIzquierdaWidth = 15;
 var bordeIzquierdaHeight = canvas.height;
 
@@ -39,7 +39,7 @@ var bordeArribaHeight = 15;
 var bordeAbajoWidth = canvas.width;
 var bordeAbajoHeight = 15;
 
-//CREAMOS VARIABLES PARA LOS OBSTACULOS
+//CREO VARIABLES PARA LOS OBSTACULOS
 var obstaculos = [];
 var obstaculoUnoX = 100;
 var obstaculoUnoY = 40;
@@ -48,7 +48,7 @@ var obstaculoUnoHeight = 300;
 var obstaculoMarginRight = 100;
 var obstaculoMarginTop = 260;
 
-//CREAMOS VARIABLES PARA EL MOVIMIENTO DE LA NAVE
+//CREO VARIABLES PARA EL MOVIMIENTO DE LA NAVE
 
 var velocidadX = 0;
 var velocidadY = 0;
@@ -64,6 +64,9 @@ var haciaDerecha = false;
 var haciaIzquierda = false;
 var haciaArriba = true;
 var haciaAbajo = false;
+
+//CREO VARIABLE PARA LLEVAR UN CONTEO DE LAS VIDAS
+var contador = 3;
 
 //CREO NAVE
 const dibujarnave = () =>{
@@ -102,29 +105,43 @@ const dibujarnave = () =>{
     contexto.closePath();
     contexto.restore();
 }
+const resetearNave = () =>{
+    contador--;
+    naveX = 50;
+    naveY = 550;
+    velocidadX = 0;
+    velocidadY = 0;
+    haciaDerecha = false;
+    haciaIzquierda = false;
+    haciaArriba = true;
+    haciaAbajo = false;
+    if (contador < 0) {
+        window.location.reload();
+    }
+}
 
 const pintarBordes = () =>{
     contexto.beginPath();
     contexto.rect(0, 0, bordeIzquierdaWidth, bordeIzquierdaHeight);
-    contexto.fillStyle = "#005555";
+    contexto.fillStyle = "#FFEB00";
     contexto.fill();
     contexto.closePath();
 
     contexto.beginPath();
     contexto.rect(0, 0, bordeArribaWidth, bordeArribaHeight);
-    contexto.fillStyle = "#005555";
+    contexto.fillStyle = "#FFEB00";
     contexto.fill();
     contexto.closePath();
 
     contexto.beginPath();
     contexto.rect(canvas.width - bordeDerechaWidth, 0, bordeDerechaWidth, bordeDerechaHeight);
-    contexto.fillStyle = "#005555";
+    contexto.fillStyle = "#FFEB00";
     contexto.fill();
     contexto.closePath();
 
     contexto.beginPath();
     contexto.rect(0, canvas.height - bordeAbajoHeight, bordeAbajoWidth, bordeAbajoHeight);
-    contexto.fillStyle = "#005555";
+    contexto.fillStyle = "#FFEB00";
     contexto.fill();
     contexto.closePath();
 }
@@ -143,7 +160,7 @@ const pintarObstaculos = () =>{
     for (let i = 0; i < obstaculos.length; i++) {// GENERO LOS OBSTACULOS CON LAS POSICIONES GUARDADAS EN EL ARRAY DE OBJETOS
         contexto.beginPath();
         contexto.rect(obstaculos[i].x, obstaculos[i].y, obstaculoUnoWidth, obstaculoUnoHeight);
-        contexto.fillStyle = "#005555";
+        contexto.fillStyle = "#FFEB00";
         contexto.fill();
         contexto.closePath();
     }
@@ -152,11 +169,19 @@ const pintarObstaculos = () =>{
 const deteccionColision = () => {
     for (let i = 0; i < obstaculos.length; i++) {// RECORRO EL ARRAY DE OBJETOS E INDICO LAS COLISIONES PARA CADA UNO DE LOS OBJETOS GUARDADOS
         if(naveX + naveHeight > obstaculos[i].x && naveX < obstaculos[i].x + obstaculoUnoWidth && naveY + naveHeight > obstaculos[i].y && naveY < obstaculos[i].y + obstaculoUnoHeight){
-            window.location.reload();
+            resetearNave();
         };
     }
 }
-//CREAMOS EVENTOS PARA PULSACIÓN DE TECLAS Y MOVIMIENTO DE NAVE
+
+const pintarContador = () =>{
+    contexto.beginPath();
+    contexto.font = "30px Arial";
+    contexto.fillStyle = "red";
+    contexto.fillText("Vidas: " + contador, 30, 50);
+    contexto.closePath();
+}
+//CREO EVENTOS PARA PULSACIÓN DE TECLAS Y MOVIMIENTO DE NAVE
 const pulsarTecla = (e) =>{
     if(e.keyCode == 37) {
         izquierdaPulsado = true;
@@ -200,6 +225,8 @@ const juego = () =>{
     pintarBordes();
     //PINTAMOS PRIMER OBSTACULO
     pintarObstaculos();
+    //PINTAMOS CONTADOR DE VIDAS
+    pintarContador();
     //GESTIONAMOS MOVIMIENTO DE LA NAVE
 
     //MOVIMIENTO HACIA LA IZQUIERDA
@@ -217,8 +244,7 @@ const juego = () =>{
         naveX += velocidadX;
     };
     if(naveX <= 0 + bordeIzquierdaWidth){
-        naveX = 0 + bordeIzquierdaWidth;
-        velocidadX = 0;
+        resetearNave();
     }
     //MOVIMIENTO HACIA ARRIBA
     if(arribaPulsado){
@@ -235,8 +261,7 @@ const juego = () =>{
         naveY += velocidadY;
     };
     if(naveY <= 0 + bordeArribaHeight){
-        naveY = 0 + bordeArribaHeight;
-        velocidadY = 0;
+        resetearNave();
     }
     //MOVIMIENTO HACIA DERECHA
     if(derechaPulsado){
@@ -253,10 +278,9 @@ const juego = () =>{
         naveX += velocidadX;
     };
     if(naveX >= canvas.width - naveHeight - bordeDerechaWidth){
-        naveX = canvas.width - naveHeight - bordeDerechaWidth;
-        velocidadX = 0;
+        resetearNave();
     }
-    //MOVIMIENTO HACIA ARRIBA
+    //MOVIMIENTO HACIA ABAJO
     if(abajoPulsado){
         haciaArriba = false;
         haciaAbajo = true;
@@ -271,8 +295,7 @@ const juego = () =>{
         naveY += velocidadY;
     };
     if(naveY >= canvas.height-naveHeight-bordeAbajoHeight){
-        naveY = canvas.height-naveHeight-bordeAbajoHeight;
-        velocidadY = 0;
+        resetearNave();
     };
 
     //COLISIONES
