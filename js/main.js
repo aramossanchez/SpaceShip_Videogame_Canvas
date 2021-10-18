@@ -42,10 +42,11 @@ var bordeAbajoHeight = 15;
 //CREAMOS VARIABLES PARA LOS OBSTACULOS
 var obstaculos = [];
 var obstaculoUnoX = 100;
-var obstaculoUnoY = 300;
+var obstaculoUnoY = 40;
 var obstaculoUnoWidth = 25;
 var obstaculoUnoHeight = 300;
 var obstaculoMarginRight = 100;
+var obstaculoMarginTop = 260;
 
 //CREAMOS VARIABLES PARA EL MOVIMIENTO DE LA NAVE
 
@@ -130,11 +131,16 @@ const pintarBordes = () =>{
 
 const pintarObstaculos = () =>{
     obstaculoMarginRight = 100;
-    for (let i = 0; i < 5; i++) {
-        obstaculos[i] = {x:obstaculoUnoX + obstaculoMarginRight, y: obstaculoUnoY};
+    for (let i = 0; i < 5; i++) {// GUARDO OBJETOS EN UN ARRAY CON LAS POSICIONES QUE TENDRÁN LOS OBSTACULOS
+        if (i%2 == 0) {// CREO LA ALTURA VARIABLE DE LOS OBSTACULOS
+            obstaculoMarginTop = 260
+        }else{
+            obstaculoMarginTop = 0;
+        }
+        obstaculos[i] = {x:obstaculoUnoX + obstaculoMarginRight, y: obstaculoUnoY + obstaculoMarginTop};
         obstaculoMarginRight += 250;
     }
-    for (let i = 0; i < obstaculos.length; i++) {
+    for (let i = 0; i < obstaculos.length; i++) {// GENERO LOS OBSTACULOS CON LAS POSICIONES GUARDADAS EN EL ARRAY DE OBJETOS
         contexto.beginPath();
         contexto.rect(obstaculos[i].x, obstaculos[i].y, obstaculoUnoWidth, obstaculoUnoHeight);
         contexto.fillStyle = "#005555";
@@ -144,7 +150,7 @@ const pintarObstaculos = () =>{
 }
 
 const deteccionColision = () => {
-    for (let i = 0; i < obstaculos.length; i++) {
+    for (let i = 0; i < obstaculos.length; i++) {// RECORRO EL ARRAY DE OBJETOS E INDICO LAS COLISIONES PARA CADA UNO DE LOS OBJETOS GUARDADOS
         if(naveX + naveHeight > obstaculos[i].x && naveX < obstaculos[i].x + obstaculoUnoWidth && naveY + naveHeight > obstaculos[i].y && naveY < obstaculos[i].y + obstaculoUnoHeight){
             window.location.reload();
         };
