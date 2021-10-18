@@ -68,6 +68,13 @@ var haciaAbajo = false;
 //CREO VARIABLE PARA LLEVAR UN CONTEO DE LAS VIDAS
 var contador = 3;
 
+//CREO VARIABLE DE FIN DE JUEGO
+var portal = new Image();
+portal.src = './img/portal.png';
+
+var giro = 0;
+
+
 //CREO NAVE
 const dibujarnave = () =>{
     contexto.save()
@@ -181,6 +188,26 @@ const pintarContador = () =>{
     contexto.fillText("Vidas: " + contador, 30, 50);
     contexto.closePath();
 }
+
+const pintarPortal = () =>{
+    giro = giro + 10;
+    contexto.save();
+    contexto.beginPath();
+    contexto.shadowBlur = 55;
+    contexto.shadowColor = "#0000FF";
+    contexto.translate(canvas.width - 100,canvas.height - 100);
+    contexto.rotate(giro * Math.PI/180);
+    contexto.drawImage(portal,-portal.width / 2, -portal.height / 2);
+    contexto.restore();
+    contexto.closePath();
+}
+
+const ganarJuego = () =>{
+    if (naveX + naveHeight > canvas.width - 100 && naveX < canvas.width - 100 + 1 && naveY + naveHeight > canvas.height - 100 && naveY < canvas.height - 100 + 1){
+        alert("WIN");
+    }
+}
+
 //CREO EVENTOS PARA PULSACIÓN DE TECLAS Y MOVIMIENTO DE NAVE
 const pulsarTecla = (e) =>{
     if(e.keyCode == 37) {
@@ -227,6 +254,9 @@ const juego = () =>{
     pintarObstaculos();
     //PINTAMOS CONTADOR DE VIDAS
     pintarContador();
+    //PINTAMOS PORTAL
+    pintarPortal();
+
     //GESTIONAMOS MOVIMIENTO DE LA NAVE
 
     //MOVIMIENTO HACIA LA IZQUIERDA
@@ -300,6 +330,9 @@ const juego = () =>{
 
     //COLISIONES
     deteccionColision();
+
+    //GANAMOS JUEGO
+    ganarJuego();
 
     //CUANDO LLAMEMOS A LA FUNCIÓN, SE EJECUTARÁ EN BUCLE CON LA TASA DE REFRESCOS MÁXIMA QUE SOPORTE EL NAVEGADOR
     requestAnimationFrame(juego);
