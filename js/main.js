@@ -40,10 +40,12 @@ var bordeAbajoWidth = canvas.width;
 var bordeAbajoHeight = 15;
 
 //CREAMOS VARIABLES PARA LOS OBSTACULOS
-var obstaculoUnoX = 200;
+var obstaculos = [];
+var obstaculoUnoX = 100;
 var obstaculoUnoY = 300;
 var obstaculoUnoWidth = 25;
 var obstaculoUnoHeight = 300;
+var obstaculoMarginRight = 100;
 
 //CREAMOS VARIABLES PARA EL MOVIMIENTO DE LA NAVE
 
@@ -126,17 +128,26 @@ const pintarBordes = () =>{
     contexto.closePath();
 }
 
-const pintarObstaculo1 = () =>{
-    contexto.beginPath();
-    contexto.rect(obstaculoUnoX, obstaculoUnoY, obstaculoUnoWidth, obstaculoUnoHeight);
-    contexto.fillStyle = "#005555";
-    contexto.fill();
-    contexto.closePath();
+const pintarObstaculos = () =>{
+    obstaculoMarginRight = 100;
+    for (let i = 0; i < 5; i++) {
+        obstaculos[i] = {x:obstaculoUnoX + obstaculoMarginRight, y: obstaculoUnoY};
+        obstaculoMarginRight += 250;
+    }
+    for (let i = 0; i < obstaculos.length; i++) {
+        contexto.beginPath();
+        contexto.rect(obstaculos[i].x, obstaculos[i].y, obstaculoUnoWidth, obstaculoUnoHeight);
+        contexto.fillStyle = "#005555";
+        contexto.fill();
+        contexto.closePath();
+    }
 }
 
 const deteccionColision = () => {
-    if(naveX + naveHeight > obstaculoUnoX && naveX < obstaculoUnoX + obstaculoUnoWidth && naveY + naveHeight > obstaculoUnoY && naveY < obstaculoUnoY + obstaculoUnoHeight){
-        window.location.reload();
+    for (let i = 0; i < obstaculos.length; i++) {
+        if(naveX + naveHeight > obstaculos[i].x && naveX < obstaculos[i].x + obstaculoUnoWidth && naveY + naveHeight > obstaculos[i].y && naveY < obstaculos[i].y + obstaculoUnoHeight){
+            window.location.reload();
+        };
     }
 }
 //CREAMOS EVENTOS PARA PULSACIÓN DE TECLAS Y MOVIMIENTO DE NAVE
@@ -182,7 +193,7 @@ const juego = () =>{
     //PINTAMOS BORDES
     pintarBordes();
     //PINTAMOS PRIMER OBSTACULO
-    pintarObstaculo1();
+    pintarObstaculos();
     //GESTIONAMOS MOVIMIENTO DE LA NAVE
 
     //MOVIMIENTO HACIA LA IZQUIERDA
@@ -260,10 +271,12 @@ const juego = () =>{
 
     //COLISIONES
     deteccionColision();
+
     //CUANDO LLAMEMOS A LA FUNCIÓN, SE EJECUTARÁ EN BUCLE CON LA TASA DE REFRESCOS MÁXIMA QUE SOPORTE EL NAVEGADOR
     requestAnimationFrame(juego);
 
 };
+
 //INVOCAMOS LA FUNCION QUE GESTIONA EL FUNCIONAMIENTO DEL JUEGO
 juego();
 
