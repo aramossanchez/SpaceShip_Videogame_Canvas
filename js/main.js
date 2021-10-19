@@ -73,6 +73,9 @@ var disparoPulsado = false;
 
 var disparos = [];
 
+var sonidoDisparo = new Audio();
+sonidoDisparo.src = "./sound/disparo.wav";
+
 //CREO VARIABLE PARA LLEVAR UN CONTEO DE LAS VIDAS
 var contador = 3;
 
@@ -194,7 +197,7 @@ const deteccionColisionDisparos = () => {
     for (let i = 0; i < obstaculos.length; i++) {// RECORRO EL ARRAY DE OBSTACULOS
         for (let a = 0; a < disparos.length; a++) {// RECORRO EL ARRAY DE DISPAROS
             console.log(disparos[a].x + disparos[a].speedX);
-            if(disparos[a].x + disparos[a].speedX > obstaculos[i].x - disparoWidth && disparos[a].x + disparos[a].speedX < obstaculos[i].x + obstaculoUnoWidth && disparos[a].y + disparos[a].speedY > obstaculos[i].y - disparoHeight/2 && disparos[a].y + disparos[a].speedY < obstaculos[i].y + obstaculoUnoHeight){
+            if(disparos[a].x + disparos[a].speedX > obstaculos[i].x - disparoWidth && disparos[a].x + disparos[a].speedX < obstaculos[i].x + obstaculoUnoWidth && disparos[a].y + disparos[a].speedY > obstaculos[i].y - disparoHeight && disparos[a].y + disparos[a].speedY < obstaculos[i].y + obstaculoUnoHeight){
                 disparos[a].x = -100;
                 disparos[a].y = -100;
             };
@@ -230,6 +233,7 @@ const ganarJuego = () =>{
 }
 
 const disparar = () =>{ //CON CADA PULSACIÓN DE ESPACIO, GUARDO UN OBJETO DISPARO EN EL ARRAY. ESTO HACE QUE CADA DISPARO PUEDA FUNCIONAR DE MANERA INDEPENDIENTE
+    sonidoDisparo.currentTime = 0.25;
     let disparo = {
         x: naveX+naveWidth/2-disparoWidth/2,
         y: naveY+naveHeight/2-disparoHeight/2,//HACE QUE LOS DISPAROS SALGAN DESDE EL CENTRO DE LA NAVE
@@ -254,12 +258,14 @@ const disparar = () =>{ //CON CADA PULSACIÓN DE ESPACIO, GUARDO UN OBJETO DISPA
         velocidadY-=0.25;
     }
     disparos.push(disparo);
+    sonidoDisparo.play();
 }
 
 const pintarDisparo = () =>{ // RECORRO EL ARRAY DE ESPACIOS CUANDO NO ESTÁ VACIO Y PINTO TODOS LOS DISPAROS LANZADOS
     if (disparos.length != 0) {
         for (let i = 0; i < disparos.length; i++) {
-            if ((disparos[i].y + disparos[i].speedY) >= (0 + bordeArribaHeight) && (disparos[i].y + disparos[i].speedY) <= (canvas.height - bordeAbajoHeight- disparoHeight) && disparos[i].x + disparos[i].speedX > 0 + bordeIzquierdaWidth && disparos[i].x + disparos[i].speedX < canvas.width - bordeDerechaWidth - disparoWidth/2) {
+            // CONTROLO LA COLISIÓN CON LOS BORDES
+            if ((disparos[i].y + disparos[i].speedY) >= (0 + bordeArribaHeight) && (disparos[i].y + disparos[i].speedY) <= (canvas.height - bordeAbajoHeight- disparoHeight) && disparos[i].x + disparos[i].speedX > 0 + bordeIzquierdaWidth && disparos[i].x + disparos[i].speedX < canvas.width - bordeDerechaWidth - disparoWidth) {
                 contexto.beginPath();
                 contexto.rect(disparos[i].x + disparos[i].speedX, disparos[i].y + disparos[i].speedY, disparoWidth, disparoHeight);
                 contexto.fillStyle = "#FF00AA";
