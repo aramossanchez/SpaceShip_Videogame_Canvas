@@ -130,6 +130,7 @@ const resetearNave = () =>{
     haciaIzquierda = false;
     haciaArriba = true;
     haciaAbajo = false;
+    disparos = [];
     if (contador < 0) {
         window.location.reload();
     }
@@ -216,26 +217,56 @@ const ganarJuego = () =>{
     }
 }
 
-const disparar = () =>{
-    disparos.push(
-        {
-            x: naveX,
-            y: naveY,
-            speedY: 5
-        }
-    );
+const disparar = () =>{ //CON CADA PULSACIÓN DE ESPACIO, GUARDO UN OBJETO DISPARO EN EL ARRAY. ESTO HACE QUE CADA DISPARO PUEDA FUNCIONAR DE MANERA INDEPENDIENTE
+    let disparo = {
+        x: naveX+naveWidth/2-disparoWidth/2,
+        y: naveY+naveHeight/2-disparoHeight/2,//HACE QUE LOS DISPAROS SALGAN DESDE EL CENTRO DE LA NAVE
+        speedX: 0,
+        speedY: 0,
+        direccion: ""
+    }
+    if (haciaIzquierda) {
+        disparo.direccion = "izquierda"
+    }
+    if (haciaArriba) {
+        disparo.direccion = "arriba"
+    }
+    if (haciaDerecha) {
+        disparo.direccion = "derecha"
+    }
+    if (haciaAbajo) {
+        disparo.direccion = "abajo"
+    }
+    disparos.push(disparo);
 }
 
-const pintarDisparo = () =>{
+const pintarDisparo = () =>{ // RECORRO EL ARRAY DE ESPACIOS CUANDO NO ESTÁ VACIO Y PINTO TODOS LOS DISPAROS LANZADOS
     if (disparos.length != 0) {
         for (let i = 0; i < disparos.length; i++) {
-            contexto.beginPath();
-            contexto.rect(disparos[i].x, disparos[i].y + disparos[i].speedY, disparoWidth, disparoHeight);
-            contexto.fillStyle = "#FF00AA";
-            contexto.fill();    
-            contexto.closePath();
-            console.log("Soy el disparo, y sigo funcionando");
-            disparos[i].speedY -= 5;
+            if ((disparos[i].y + disparos[i].speedY) >= (0 + bordeArribaHeight) && (disparos[i].y + disparos[i].speedY) <= (canvas.height - bordeAbajoHeight- disparoHeight)) {
+                contexto.beginPath();
+                contexto.rect(disparos[i].x + disparos[i].speedX, disparos[i].y + disparos[i].speedY, disparoWidth, disparoHeight);
+                contexto.fillStyle = "#FF00AA";
+                contexto.fill();    
+                contexto.closePath();
+                switch (disparos[i].direccion) {
+                    case "izquierda":
+                        disparos[i].speedX -= 5;
+                        break;
+                    case "arriba":
+                        disparos[i].speedY -= 5;
+                        break;
+                    case "derecha":
+                        disparos[i].speedX += 5;
+                        break;
+                    case "abajo":
+                        disparos[i].speedY += 5;
+                        break;
+                    default:
+                        break;
+                };
+                console.log((disparos[i].y + disparos[i].speedY));
+            }
         }
     }
 }
@@ -269,7 +300,7 @@ const levantarTecla = (e) =>{
     if(e.keyCode == 40) {
         abajoPulsado = false;
     }
-    if(e.keyCode == 32) {
+    if(e.keyCode == 32) {// SOLTAR EL ESPACIO PROVOCA DISPARO
         disparar();
     }
 }
