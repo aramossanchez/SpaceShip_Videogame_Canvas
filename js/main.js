@@ -49,11 +49,8 @@ var obstaculoMarginRight = 100;
 var obstaculoMarginTop = 260;
 
 //CREO VARIABLES PARA EL MOVIMIENTO DE LA NAVE
-
 var velocidadX = 0;
 var velocidadY = 0;
-
-var disparoVelocidadY = 0;
 
 var izquierdaPulsado = false;
 var derechaPulsado = false;
@@ -64,6 +61,17 @@ var haciaDerecha = false;
 var haciaIzquierda = false;
 var haciaArriba = true;
 var haciaAbajo = false;
+
+//VARIABLES PARA LOS DISPAROS
+var velocidadDisparoX = 0;
+var velocidadDisparoY = 4;
+
+var disparoWidth = 10;
+var disparoHeight = 10;
+
+var disparoPulsado = false;
+
+var disparos = [];
 
 //CREO VARIABLE PARA LLEVAR UN CONTEO DE LAS VIDAS
 var contador = 3;
@@ -208,6 +216,30 @@ const ganarJuego = () =>{
     }
 }
 
+const disparar = () =>{
+    disparos.push(
+        {
+            x: naveX,
+            y: naveY,
+            speedY: 5
+        }
+    );
+}
+
+const pintarDisparo = () =>{
+    if (disparos.length != 0) {
+        for (let i = 0; i < disparos.length; i++) {
+            contexto.beginPath();
+            contexto.rect(disparos[i].x, disparos[i].y + disparos[i].speedY, disparoWidth, disparoHeight);
+            contexto.fillStyle = "#FF00AA";
+            contexto.fill();    
+            contexto.closePath();
+            console.log("Soy el disparo, y sigo funcionando");
+            disparos[i].speedY -= 5;
+        }
+    }
+}
+
 //CREO EVENTOS PARA PULSACIÓN DE TECLAS Y MOVIMIENTO DE NAVE
 const pulsarTecla = (e) =>{
     if(e.keyCode == 37) {
@@ -237,6 +269,9 @@ const levantarTecla = (e) =>{
     if(e.keyCode == 40) {
         abajoPulsado = false;
     }
+    if(e.keyCode == 32) {
+        disparar();
+    }
 }
 
 document.addEventListener("keydown", pulsarTecla, false);
@@ -256,6 +291,8 @@ const juego = () =>{
     pintarContador();
     //PINTAMOS PORTAL
     pintarPortal();
+    //PINTAMOS DISPARO
+    pintarDisparo();
 
     //GESTIONAMOS MOVIMIENTO DE LA NAVE
 
