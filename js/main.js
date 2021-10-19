@@ -182,12 +182,24 @@ const pintarObstaculos = () =>{
     }
 }
 
-const deteccionColision = () => {
+const deteccionColisionNave = () => {
     for (let i = 0; i < obstaculos.length; i++) {// RECORRO EL ARRAY DE OBJETOS E INDICO LAS COLISIONES PARA CADA UNO DE LOS OBJETOS GUARDADOS
         if(naveX + naveHeight > obstaculos[i].x && naveX < obstaculos[i].x + obstaculoUnoWidth && naveY + naveHeight > obstaculos[i].y && naveY < obstaculos[i].y + obstaculoUnoHeight){
             resetearNave();
         };
     }
+}
+
+const deteccionColisionDisparos = () => {
+    for (let i = 0; i < obstaculos.length; i++) {// RECORRO EL ARRAY DE OBSTACULOS
+        for (let a = 0; a < disparos.length; a++) {// RECORRO EL ARRAY DE DISPAROS
+            console.log(disparos[a].x + disparos[a].speedX);
+            if(disparos[a].x + disparos[a].speedX > obstaculos[i].x - disparoWidth && disparos[a].x + disparos[a].speedX < obstaculos[i].x + obstaculoUnoWidth && disparos[a].y + disparos[a].speedY > obstaculos[i].y - disparoHeight/2 && disparos[a].y + disparos[a].speedY < obstaculos[i].y + obstaculoUnoHeight){
+                disparos[a].x = -100;
+                disparos[a].y = -100;
+            };
+        };
+    };
 }
 
 const pintarContador = () =>{
@@ -226,16 +238,20 @@ const disparar = () =>{ //CON CADA PULSACIÓN DE ESPACIO, GUARDO UN OBJETO DISPA
         direccion: ""
     }
     if (haciaIzquierda) {
-        disparo.direccion = "izquierda"
+        disparo.direccion = "izquierda";
+        velocidadX+=0.25;
     }
     if (haciaArriba) {
-        disparo.direccion = "arriba"
+        disparo.direccion = "arriba";
+        velocidadY+=0.25;
     }
     if (haciaDerecha) {
-        disparo.direccion = "derecha"
+        disparo.direccion = "derecha";
+        velocidadX-=0.25;
     }
     if (haciaAbajo) {
-        disparo.direccion = "abajo"
+        disparo.direccion = "abajo";
+        velocidadY-=0.25;
     }
     disparos.push(disparo);
 }
@@ -243,7 +259,7 @@ const disparar = () =>{ //CON CADA PULSACIÓN DE ESPACIO, GUARDO UN OBJETO DISPA
 const pintarDisparo = () =>{ // RECORRO EL ARRAY DE ESPACIOS CUANDO NO ESTÁ VACIO Y PINTO TODOS LOS DISPAROS LANZADOS
     if (disparos.length != 0) {
         for (let i = 0; i < disparos.length; i++) {
-            if ((disparos[i].y + disparos[i].speedY) >= (0 + bordeArribaHeight) && (disparos[i].y + disparos[i].speedY) <= (canvas.height - bordeAbajoHeight- disparoHeight)) {
+            if ((disparos[i].y + disparos[i].speedY) >= (0 + bordeArribaHeight) && (disparos[i].y + disparos[i].speedY) <= (canvas.height - bordeAbajoHeight- disparoHeight) && disparos[i].x + disparos[i].speedX > 0 + bordeIzquierdaWidth && disparos[i].x + disparos[i].speedX < canvas.width - bordeDerechaWidth - disparoWidth/2) {
                 contexto.beginPath();
                 contexto.rect(disparos[i].x + disparos[i].speedX, disparos[i].y + disparos[i].speedY, disparoWidth, disparoHeight);
                 contexto.fillStyle = "#FF00AA";
@@ -265,7 +281,6 @@ const pintarDisparo = () =>{ // RECORRO EL ARRAY DE ESPACIOS CUANDO NO ESTÁ VAC
                     default:
                         break;
                 };
-                console.log((disparos[i].y + disparos[i].speedY));
             }
         }
     }
@@ -397,7 +412,8 @@ const juego = () =>{
     };
 
     //COLISIONES
-    deteccionColision();
+    deteccionColisionNave();
+    deteccionColisionDisparos();
 
     //GANAMOS JUEGO
     ganarJuego();
