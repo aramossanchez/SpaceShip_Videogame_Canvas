@@ -3,6 +3,21 @@
 
 //ENTORNO
 
+//CREO LA CLASE NAVE, DONDE CREO EL ESQUEMA DE TODAS LAS CARACTERÍSTICAS QUE TENDRÁ LA NAVE QUE ELIJAMOS
+class Nave {
+
+    constructor(nombre){
+        this.nombre = nombre,
+        this.velocidad = velocidad,
+        this.disparo = disparo,
+        this.imagenIzquierda = imagenIzquierda,
+        this.imagenArriba = imagenArriba,
+        this.imagenDerecha = imagenDerecha,
+        this.imagenAbajo = imagenAbajo,
+        this.sonido = sonido
+    }
+
+}
 //REFERENCIO CANVAS Y CREO CONTEXTO 2D
 let canvas = document.getElementById("game");
 let contexto = canvas.getContext("2d");
@@ -292,6 +307,14 @@ const pintarDisparo = () =>{ // RECORRO EL ARRAY DE ESPACIOS CUANDO NO ESTÁ VAC
     }
 }
 
+const pintarEnemigos = () => {
+    contexto.beginPath();
+    contexto.rect(1300, 100, 50, 50);
+    contexto.fillStyle = "#FF00AA";
+    contexto.fill();    
+    contexto.closePath();
+}
+
 //CREO EVENTOS PARA PULSACIÓN DE TECLAS Y MOVIMIENTO DE NAVE
 const pulsarTecla = (e) =>{
     if(e.keyCode == 37) {
@@ -345,6 +368,8 @@ const juego = () =>{
     pintarPortal();
     //PINTAMOS DISPARO
     pintarDisparo();
+    //PINTAMOS ENEMIGOS
+    pintarEnemigos();
 
     //GESTIONAMOS MOVIMIENTO DE LA NAVE
 
