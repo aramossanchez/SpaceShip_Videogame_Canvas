@@ -14,6 +14,33 @@ VERSION: 1.0
     align-items: center;
     justify-content: center;
 }
+#pantalla-seleccion{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 100%;
+}
+#naves{
+    display: flex;
+    flex: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    height: 100%;
+}
+.seleccion-nave{
+    width: 20%;
+    height: 200px;
+    background-color: aqua;
+}
+#boton-jugar{
+    width: 20%;
+    height: 200px;
+    background-color: aqua;
+}
 canvas{
+    display: none;
     background-color: rgb(20, 20, 20);
 }

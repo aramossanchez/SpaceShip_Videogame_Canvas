@@ -6,40 +6,69 @@
 //CREO LA CLASE NAVE, DONDE CREO EL ESQUEMA DE TODAS LAS CARACTERÍSTICAS QUE TENDRÁ LA NAVE QUE ELIJAMOS
 class Nave {
 
-    constructor(nombre){
+    constructor(nombre, velocidadMaxima, aceleracion, naveWidth, naveHeight, disparo, imagenIzquierda, imagenArriba, imagenDerecha, imagenAbajo, disparoTamaño, disparoSonido, disparoVelocidad){
         this.nombre = nombre,
-        this.velocidad = velocidad,
+        this.velocidadMaxima = velocidadMaxima,
+        this.aceleracion = aceleracion,
+        this.naveWidth = naveWidth,
+        this.naveHeight = naveHeight,
         this.disparo = disparo,
         this.imagenIzquierda = imagenIzquierda,
         this.imagenArriba = imagenArriba,
         this.imagenDerecha = imagenDerecha,
         this.imagenAbajo = imagenAbajo,
-        this.sonido = sonido
+        this.disparoTamaño = disparoTamaño,
+        this.disparoSonido = disparoSonido,
+        this.disparoVelocidad = disparoVelocidad
     }
 
+};
+
+//CREO VARIABLES Y METODO PARA SELECCIONAR LA NAVE CON LA QUE JUGAREMOS
+
+//ARRAY CON TODAS LAS NAVES ELEGIBLES
+let navesPosibles = [
+    ["StartLink", 5, 0.10, 45, 45, "./img/disparoStarLink.png", "./img/naveIzquierda.png", "./img/naveArriba.png", "./img/naveDerecha.png", "./img/naveAbajo.png", 10, "./sound/disparo.wav", 0.25],
+]
+
+//INICIALIZO LA VARIABLE DE LA NAVE ELEGIDA CON LA PRIMERA NAVE, PARA QUE CARGUE TODO EL JUEGO SIN ERRORES
+let naveElegida = new Nave(navesPosibles[0][0], navesPosibles[0][1], navesPosibles[0][2], navesPosibles[0][3], navesPosibles[0][4], navesPosibles[0][5], navesPosibles[0][6], navesPosibles[0][7], navesPosibles[0][8], navesPosibles[0][9], navesPosibles[0][10], navesPosibles[0][11], navesPosibles[0][12],);
+
+const instanciarNave = (nave) => {
+    naveElegida = new Nave(navesPosibles[nave][0], navesPosibles[nave][1], navesPosibles[nave][2], navesPosibles[nave][3], navesPosibles[nave][4], navesPosibles[nave][5], navesPosibles[nave][6], navesPosibles[nave][7], navesPosibles[nave][8], navesPosibles[nave][9], navesPosibles[nave][10],);
+    console.log(naveElegida);
 }
+
+//VARIABLES Y METODO PARA GESTIÓN DE CAMBIO DE PANTALLAS
+let pantallas = [document.getElementById("pantalla-seleccion"), document.getElementById("game")];
+
+const cambiarPantalla = (pantalla) =>{
+    pantallas.filter(pantalla => pantalla.style.display = "none");
+    pantallas[pantalla].style.display = "flex";
+};
+
 //REFERENCIO CANVAS Y CREO CONTEXTO 2D
 let canvas = document.getElementById("game");
 let contexto = canvas.getContext("2d");
 
 //CREO VARIABLES PARA LA NAVE
-var naveWidth = 45;
-var naveHeight = 45;
+var naveWidth = naveElegida.naveWidth;
+var naveHeight = naveElegida.naveHeight;
 var naveX = 50;
 var naveY = 550;
 
 //TRAIGO IMAGEN DE LA NAVE
 var naveArriba = new Image();
-naveArriba.src = './img/naveArriba.png';
+naveArriba.src = naveElegida.imagenArriba;
 
 var naveAbajo = new Image();
-naveAbajo.src = './img/naveAbajo.png';
+naveAbajo.src = naveElegida.imagenAbajo;
 
 var naveIzquierda = new Image();
-naveIzquierda.src = './img/naveIzquierda.png';
+naveIzquierda.src = naveElegida.imagenIzquierda;
 
 var naveDerecha = new Image();
-naveDerecha.src = './img/naveDerecha.png';
+naveDerecha.src = naveElegida.imagenDerecha;
 
 //CREO VARIABLES PARA LOS BORDES
 var bordeIzquierdaWidth = 15;
@@ -79,7 +108,7 @@ var haciaAbajo = false;
 
 //VARIABLES PARA LOS DISPAROS
 var velocidadDisparoX = 0;
-var velocidadDisparoY = 4;
+var velocidadDisparoY = 0;
 
 var disparoWidth = 10;
 var disparoHeight = 10;
@@ -90,6 +119,9 @@ var disparos = [];
 
 var sonidoDisparo = new Audio();
 sonidoDisparo.src = "./sound/disparo.wav";
+
+var imagenDisparo = new Image();
+imagenDisparo.src = './img/disparoStarLink.png';
 
 //CREO VARIABLE PARA LLEVAR UN CONTEO DE LAS VIDAS
 var contador = 3;
@@ -282,7 +314,7 @@ const pintarDisparo = () =>{ // RECORRO EL ARRAY DE ESPACIOS CUANDO NO ESTÁ VAC
             // CONTROLO LA COLISIÓN CON LOS BORDES
             if ((disparos[i].y + disparos[i].speedY) >= (0 + bordeArribaHeight) && (disparos[i].y + disparos[i].speedY) <= (canvas.height - bordeAbajoHeight- disparoHeight) && disparos[i].x + disparos[i].speedX > 0 + bordeIzquierdaWidth && disparos[i].x + disparos[i].speedX < canvas.width - bordeDerechaWidth - disparoWidth) {
                 contexto.beginPath();
-                contexto.rect(disparos[i].x + disparos[i].speedX, disparos[i].y + disparos[i].speedY, disparoWidth, disparoHeight);
+                contexto.drawImage(imagenDisparo, disparos[i].x + disparos[i].speedX, disparos[i].y + disparos[i].speedY, disparoWidth, disparoHeight);
                 contexto.fillStyle = "#FF00AA";
                 contexto.fill();    
                 contexto.closePath();
