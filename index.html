@@ -21,7 +21,13 @@ VERSION: 1.0
                 <div class="seleccion-nave" onclick="instanciarNave(2)" id="nave2"></div>
                 <div class="seleccion-nave" onclick="instanciarNave(3)" id="nave3"></div>
             </div>
-            <div id="boton-jugar" onclick="cambiarPantalla(1)"></div>
+            <div id="boton-jugar">
+                <h2 id="h2-boton-jugar">Are you sure?</h2>
+                <div id="botones">
+                    <div onclick="cambiarPantalla(1)">YES</div>
+                    <div onclick="cerrarMensaje()">NO</div>
+                </div>
+            </div>
         </div>
         <canvas id="game" width="1450" height="650"></canvas>
     </div>

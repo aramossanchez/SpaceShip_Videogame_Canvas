@@ -37,7 +37,7 @@ let navesPosibles = [
 
 //PINTO TODAS LAS NAVES EN LA PANTALLA DE SELECCIÓN
 for (let i = 0; i < navesPosibles.length; i++) {
-    document.getElementById(`nave${i}`).innerHTML = `<div>Name: ${navesPosibles[i][0]}</div><img src="${navesPosibles[i][9]}"><div>Aceleration: ${navesPosibles[i][3]}</div><div>Max Speed: ${navesPosibles[i][2]}</div>`;
+    document.getElementById(`nave${i}`).innerHTML = `<div><span>Name:</span> ${navesPosibles[i][0]}</div><img src="${navesPosibles[i][9]}"><div><span>Aceleration:</span> ${navesPosibles[i][3]*100}</div><div><span>Max Speed:</span> ${navesPosibles[i][2]*100}</div>`;
 }
 
 //INICIALIZO LA VARIABLE DE LA NAVE ELEGIDA CON LA PRIMERA NAVE, PARA QUE CARGUE TODO EL JUEGO SIN ERRORES
@@ -46,6 +46,14 @@ let naveElegida = new Nave(navesPosibles[0][0], navesPosibles[0][1], navesPosibl
 const instanciarNave = (nave) => {
     naveElegida = new Nave(navesPosibles[nave][0], navesPosibles[nave][1], navesPosibles[nave][2], navesPosibles[nave][3], navesPosibles[nave][4], navesPosibles[nave][5], navesPosibles[nave][6], navesPosibles[nave][7], navesPosibles[nave][8], navesPosibles[nave][9], navesPosibles[nave][10], navesPosibles[nave][11], navesPosibles[nave][12], navesPosibles[nave][13],);
     console.log(naveElegida);
+    document.getElementById("boton-jugar").style.opacity = 1;
+    document.getElementById("boton-jugar").style.top = "40%";
+    document.getElementById("h2-boton-jugar").innerHTML = `You have selected <span>${naveElegida.nombre}</span>. Are you sure?`
+    let casillasSeleccionNave = document.getElementsByClassName("seleccion-nave")
+    for (let i = 0; i < casillasSeleccionNave.length; i++) {
+        casillasSeleccionNave[i].style.pointerEvents = "none";
+        casillasSeleccionNave[i].style.opacity = 0.5;
+    }
 }
 
 //VARIABLES Y METODO PARA GESTIÓN DE CAMBIO DE PANTALLAS
@@ -55,6 +63,15 @@ const cambiarPantalla = (pantalla) =>{
     pantallas.filter(pantalla => pantalla.style.display = "none");
     pantallas[pantalla].style.display = "flex";
 };
+
+const cerrarMensaje = () => {
+    document.getElementById("boton-jugar").style.opacity = 0;
+    document.getElementById("boton-jugar").style.top = "-150%";let casillasSeleccionNave = document.getElementsByClassName("seleccion-nave")
+    for (let i = 0; i < casillasSeleccionNave.length; i++) {
+        casillasSeleccionNave[i].style.pointerEvents = "initial";
+        casillasSeleccionNave[i].style.opacity = 1;
+    }
+}
 
 //REFERENCIO CANVAS Y CREO CONTEXTO 2D
 let canvas = document.getElementById("game");
@@ -76,23 +93,23 @@ var naveIzquierda = new Image();
 var naveDerecha = new Image();
 
 //CREO VARIABLES PARA LOS BORDES
-var bordeIzquierdaWidth = 15;
+var bordeIzquierdaWidth = 2.5;
 var bordeIzquierdaHeight = canvas.height;
 
-var bordeDerechaWidth = 15;
+var bordeDerechaWidth = 2.5;
 var bordeDerechaHeight = canvas.height;
 
 var bordeArribaWidth = canvas.width;
-var bordeArribaHeight = 15;
+var bordeArribaHeight = 2.5;
 
 var bordeAbajoWidth = canvas.width;
-var bordeAbajoHeight = 15;
+var bordeAbajoHeight = 2.5;
 
 //CREO VARIABLES PARA LOS OBSTACULOS
 var obstaculos = [];
 var obstaculoUnoX = 100;
 var obstaculoUnoY = 40;
-var obstaculoUnoWidth = 25;
+var obstaculoUnoWidth = 10;
 var obstaculoUnoHeight = 300;
 var obstaculoMarginRight = 100;
 var obstaculoMarginTop = 260;
@@ -192,25 +209,25 @@ const resetearNave = () =>{
 const pintarBordes = () =>{
     contexto.beginPath();
     contexto.rect(0, 0, bordeIzquierdaWidth, bordeIzquierdaHeight);
-    contexto.fillStyle = "#FFEB00";
+    contexto.fillStyle = "#FFFFFF";
     contexto.fill();
     contexto.closePath();
 
     contexto.beginPath();
     contexto.rect(0, 0, bordeArribaWidth, bordeArribaHeight);
-    contexto.fillStyle = "#FFEB00";
+    contexto.fillStyle = "#FFFFFF";
     contexto.fill();
     contexto.closePath();
 
     contexto.beginPath();
     contexto.rect(canvas.width - bordeDerechaWidth, 0, bordeDerechaWidth, bordeDerechaHeight);
-    contexto.fillStyle = "#FFEB00";
+    contexto.fillStyle = "#FFFFFF";
     contexto.fill();
     contexto.closePath();
 
     contexto.beginPath();
     contexto.rect(0, canvas.height - bordeAbajoHeight, bordeAbajoWidth, bordeAbajoHeight);
-    contexto.fillStyle = "#FFEB00";
+    contexto.fillStyle = "#FFFFFF";
     contexto.fill();
     contexto.closePath();
 }
@@ -229,7 +246,7 @@ const pintarObstaculos = () =>{
     for (let i = 0; i < obstaculos.length; i++) {// GENERO LOS OBSTACULOS CON LAS POSICIONES GUARDADAS EN EL ARRAY DE OBJETOS
         contexto.beginPath();
         contexto.rect(obstaculos[i].x, obstaculos[i].y, obstaculoUnoWidth, obstaculoUnoHeight);
-        contexto.fillStyle = "#FFEB00";
+        contexto.fillStyle = "#8B0200";
         contexto.fill();
         contexto.closePath();
     }

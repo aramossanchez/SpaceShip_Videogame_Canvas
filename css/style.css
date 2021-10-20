@@ -2,10 +2,17 @@
 AUTOR: ARMANDO RAMOS SÁNCHEZ
 VERSION: 1.0
 */
+/*IMPORTO FUENTES*/
+@import url('https://fonts.googleapis.com/css2?family=Exo:wght@500&display=swap');
+/* FORMATO GENERAL */
 *{
     padding: 0;
     margin: 0;
 }
+body{
+    background-color: rgb(0, 0, 0);
+}
+/* CONTENEDOR GENERAL */
 #container{
     width: 100vw;
     height: 100vh;
@@ -14,6 +21,7 @@ VERSION: 1.0
     align-items: center;
     justify-content: center;
 }
+/* MODIFICAMOS LA PANTALLA DONDE SELECCIONAMOS LA NAVE PARA JUGAR */
 #pantalla-seleccion{
     display: flex;
     flex-direction: column;
@@ -21,7 +29,19 @@ VERSION: 1.0
     justify-content: space-evenly;
     width: 100%;
     height: 100%;
+    background-image: url("../img/fondo-seleccion-nave.gif");
+    background-repeat: no-repeat;
+    background-size: cover;
 }
+#pantalla-seleccion h1{
+    font-family: 'Exo', sans-serif;
+    font-size: 5em;
+    margin-top: 0.5em;
+    background: -webkit-linear-gradient(pink, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+/* CONTENEDOR DE LAS NAVES */
 #naves{
     display: flex;
     flex: row;
@@ -31,26 +51,79 @@ VERSION: 1.0
     height: 100%;
 }
 .seleccion-nave{
-    width: 20%;
-    height: 200px;
-    background-color: aqua;
+    font-family: 'Exo', sans-serif;
+    width: 15%;
+    height: 15em;
+    background-color: rgb(0, 0, 0);
+    border-radius: 2em;
+    padding: 0 0em 0 1.5em;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
+    color: white;
+    border: 0.1em solid white;
+    transition: 0.5s;
+}
+.seleccion-nave div{
+    margin: 1em 0;
+}
+.seleccion-nave div span{
+    background: -webkit-linear-gradient(pink, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 .seleccion-nave img{
     width: 5em;
     height: 4em;
 }
+/* MENU QUE APARECE CUANDO SELECCIONAMOS UNA NAVE */
 #boton-jugar{
-    width: 20%;
-    height: 200px;
-    background-color: aqua;
-    cursor: pointer;
+    font-family: 'Exo', sans-serif;
+    position: absolute;
+    top: -150%;
+    width: 40%;
+    height: 10em;
+    padding: 1em;
+    background-color: rgb(37, 37, 37);
+    transition: 0.5s;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    border: 0.1em solid white;
+    border-radius: 1em;
 }
+#boton-jugar h2{
+    text-align: center;
+    font-size: 2em;
+    color: white;
+}
+h2 span{
+    background: -webkit-linear-gradient(pink, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+#botones{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+#botones div{
+    margin: 0.5em 1em;
+    padding: 0.5em 1em;
+    font-size: 1.5em;
+    cursor: pointer;
+    background: rgb(36,114,237);
+    background: linear-gradient(180deg, pink 50%, red 100%);
+    color: black;
+    border-radius: 0.5em;
+}
+/* LIENZO DEL JUEGO */
 canvas{
     display: none;
-    background-color: rgb(20, 20, 20);
+    background-image: url("../img/fondo-juego.gif");
 }
