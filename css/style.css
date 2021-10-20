@@ -34,11 +34,21 @@ VERSION: 1.0
     width: 20%;
     height: 200px;
     background-color: aqua;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.seleccion-nave img{
+    width: 5em;
+    height: 4em;
 }
 #boton-jugar{
     width: 20%;
     height: 200px;
     background-color: aqua;
+    cursor: pointer;
 }
 canvas{
     display: none;
