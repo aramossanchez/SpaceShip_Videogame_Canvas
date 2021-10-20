@@ -275,7 +275,7 @@ const deteccionColisionDisparos = () => {
 const pintarContador = () =>{
     contexto.beginPath();
     contexto.font = "30px Arial";
-    contexto.fillStyle = "red";
+    contexto.fillStyle = "#FFBD00";
     contexto.fillText("Ships: " + contador, 30, 50);
     contexto.closePath();
 }
