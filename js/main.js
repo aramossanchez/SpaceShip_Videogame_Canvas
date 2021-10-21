@@ -31,7 +31,7 @@ class Nave {
 let navesPosibles = [
     ["StartLink", "#FF0000", 5, 0.10, 45, 45, "./img/disparoStarLink.png", "./img/StartLinkIzquierda.png", "./img/StartLinkArriba.png", "./img/StartLinkDerecha.png", "./img/StartLinkAbajo.png", 20, "./sound/disparoSpaceLink.wav", 5],
     ["Black Mamba", "#52C8FD", 6, 0.20, 30, 30, "./img/disparoBlackMamba.png", "./img/BlackMambaIzquierda.png", "./img/BlackMambaArriba.png", "./img/BlackMambaDerecha.png", "./img/BlackMambaAbajo.png", 10, "./sound/disparoBlackMamba.wav", 7],
-    ["Snasa", "#00FF7E", 2, 0.25, 50, 50, "./img/disparoSnasa.png", "./img/SnasaIzquierda.png", "./img/SnasaArriba.png", "./img/SnasaDerecha.png", "./img/SnasaAbajo.png", 25, "./sound/disparoSnasa.wav", 3],
+    ["Snasa", "#00FF7E", 2, 0.25, 50, 50, "./img/disparoSnasa.png", "./img/SnasaIzquierda.png", "./img/SnasaArriba.png", "./img/SnasaDerecha.png", "./img/SnasaAbajo.png", 40, "./sound/disparoSnasa.wav", 3],
     ["Space Cat", "#FFFFFF", 6, 0.05, 70, 70, "./img/disparoSpaceCat.png", "./img/SpaceCatIzquierda.png", "./img/SpaceCatArriba.png", "./img/SpaceCatDerecha.png", "./img/SpaceCatAbajo.png", 30, "./sound/disparoSpaceCat.wav", 8]
 ]
 
@@ -151,14 +151,16 @@ var enemigo = new Image();
 enemigo.src = './img/enemigo.png';
 
 
-let enemigoObjeto = {x: 1000, y: 100};
-enemigoMovimientoX = 3;
+let enemigos = [
+    {x: 30, y: 100, MovimientoX: 3, MovimientoY: 0},
+    {x: 1001, y: 100, MovimientoX: 2, MovimientoY: 0}
+];
 
 //CREO VARIABLE DE VIDA RECOGIBLE
 var vida = new Image();
 vida.src = './img/vida.png';
 
-let vidaRecogible = {x:canvas.width - 60, y: 30};
+let vidaRecogible = {x:canvas.width/2 - 35, y: 100};
 
 //CREO VARIABLE DE FIN DE JUEGO
 var portal = new Image();
@@ -276,8 +278,7 @@ const deteccionColisionNave = () => {
 
 const deteccionColisionDisparos = () => {
     for (let i = 0; i < obstaculos.length; i++) {// RECORRO EL ARRAY DE OBSTACULOS
-        for (let a = 0; a < disparos.length; a++) {// RECORRO EL ARRAY DE DISPAROS
-            console.log(disparos[a].x + disparos[a].speedX);
+        for (let a = 0; a < disparos.length; a++) {// RECORRO EL ARRAY DE DISPAROS            
             if(disparos[a].x + disparos[a].speedX > obstaculos[i].x - disparoWidth && disparos[a].x + disparos[a].speedX < obstaculos[i].x + obstaculoUnoWidth && disparos[a].y + disparos[a].speedY > obstaculos[i].y - disparoHeight && disparos[a].y + disparos[a].speedY < obstaculos[i].y + obstaculoUnoHeight){
                 disparos[a].x = -100;
                 disparos[a].y = -100;
@@ -287,9 +288,10 @@ const deteccionColisionDisparos = () => {
 }
 
 const deteccionColisionEnemigos = () => {
-    if (naveX + naveWidth > enemigoObjeto.x && naveY < enemigoObjeto.y + 50 && naveX < enemigoObjeto.x + 50 && naveY + naveHeight > enemigoObjeto.y) {
-        resetearNave();
-        console.log(enemigoObjeto.x);
+    for (let i = 0; i < enemigos.length; i++) {
+        if (naveX + naveWidth > enemigos[i].x && naveY < enemigos[i].y + 50 && naveX < enemigos[i].x + 50 && naveY + naveHeight > enemigos[i].y) {
+            resetearNave();
+        };
     }
 }
 
@@ -381,24 +383,31 @@ const pintarDisparo = () =>{ // RECORRO EL ARRAY DE ESPACIOS CUANDO NO ESTÁ VAC
 };
 
 const pintarEnemigos = () => {
-    contexto.beginPath();
-    contexto.drawImage(enemigo, enemigoObjeto.x, enemigoObjeto.y, 50, 50);
-    contexto.fill();    
-    contexto.closePath();
+    for (let i = 0; i < enemigos.length; i++) {
+        contexto.beginPath();
+        contexto.drawImage(enemigo, enemigos[i].x, enemigos[i].y, 50, 50);
+        contexto.fill();    
+        contexto.closePath();        
+    }
 };
 
 const colisionDisparoConEnemigo = () =>{
     for (let i = 0; i < disparos.length; i++) {
-        // CONTROLO LA COLISIÓN CON LOS ENEMIGOS
-        if ((disparos[i].y + disparos[i].speedY) <= enemigoObjeto.y + 50 && disparos[i].y + disparos[i].speedY + disparoHeight >= enemigoObjeto.y && disparos[i].x + disparos[i].speedX <= enemigoObjeto.x + 50 && disparos[i].x + disparos[i].speedX + disparoWidth >= enemigoObjeto.x) {
-            enemigoObjeto.x = -100;
-            enemigoObjeto.y = -100;
-            enemigoMovimientoX = 0;
-            disparos[i].x = -100;
-            disparos[i].y = -100;
-            disparos[i].speedY = 0;
-            disparos[i].speedX = 0;
-        };
+        for (let a = 0; a < enemigos.length; a++) {
+            // CONTROLO LA COLISIÓN CON LOS ENEMIGOS
+            console.log("soy los disparos " + disparos[i]);
+            console.log(enemigos[a]);
+            if ((disparos[i].y + disparos[i].speedY) <= enemigos[a].y + 50 && disparos[i].y + disparos[i].speedY + disparoHeight >= enemigos[a].y && disparos[i].x + disparos[i].speedX <= enemigos[a].x + 50 && disparos[i].x + disparos[i].speedX + disparoWidth >= enemigos[a].x) {
+                enemigos[a].x = -100;
+                enemigos[a].y = -100;
+                enemigoMovimientoX = 0;
+                disparos[i].x = -100;
+                disparos[i].y = -100;
+                disparos[i].speedY = 0;
+                disparos[i].speedX = 0;
+            };
+        }
+        
     }
 };
 
@@ -487,14 +496,27 @@ const juego = () =>{
     pintarDisparo();
     //PINTAMOS ENEMIGOS
     pintarEnemigos();
-    enemigoObjeto.x += enemigoMovimientoX;
-    //GESTIONAMOS MOVIMIENTO DE ENEMIGOS
-    if(enemigoObjeto.x >= 1350){
-        enemigoMovimientoX = -enemigoMovimientoX;
-    };
-    if(enemigoObjeto.x <= 1000){
-        enemigoMovimientoX = -enemigoMovimientoX;
-    };
+    for (let i = 0; i < enemigos.length; i++) {
+        enemigos[i].x += enemigos[i].MovimientoX;
+        console.log(enemigos[1].MovimientoX);
+        console.log(enemigos[1].x);
+        if (enemigos[0].x >= 380) {
+            enemigos[0].MovimientoX = -enemigos[0].MovimientoX;
+            enemigos[0].x = 379;
+        }
+        if (enemigos[0].x <= 40) {
+            enemigos[0].MovimientoX = -enemigos[0].MovimientoX;
+            enemigos[0].x = 41;
+        }
+        if (enemigos[1].x >= 1350) {
+            enemigos[1].MovimientoX = -enemigos[1].MovimientoX;
+            enemigos[1].x = 1349;
+        }
+        if (enemigos[1].x <= 1000) {
+            enemigos[1].MovimientoX = -enemigos[1].MovimientoX;
+            enemigos[1].x = 1001;
+        }
+    }
     pintarVidaRecogible();
 
 
