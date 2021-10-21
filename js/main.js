@@ -29,10 +29,10 @@ class Nave {
 
 //ARRAY CON TODAS LAS NAVES ELEGIBLES
 let navesPosibles = [
-    ["StartLink", "#FF0000", 5, 0.10, 45, 45, "./img/disparoStarLink.png", "./img/StartLinkIzquierda.png", "./img/StartLinkArriba.png", "./img/StartLinkDerecha.png", "./img/StartLinkAbajo.png", 20, "./sound/disparo.wav", 5],
-    ["Black Mamba", "#52C8FD", 6, 0.20, 30, 30, "./img/disparoBlackMamba.png", "./img/BlackMambaIzquierda.png", "./img/BlackMambaArriba.png", "./img/BlackMambaDerecha.png", "./img/BlackMambaAbajo.png", 10, "./sound/disparo.wav", 7],
-    ["Snasa", "#00FF7E", 2, 0.25, 50, 50, "./img/disparoSnasa.png", "./img/SnasaIzquierda.png", "./img/SnasaArriba.png", "./img/SnasaDerecha.png", "./img/SnasaAbajo.png", 25, "./sound/disparo.wav", 3],
-    ["Space Cat", "#FFFFFF", 6, 0.05, 70, 70, "./img/disparoSpaceCat.png", "./img/SpaceCatIzquierda.png", "./img/SpaceCatArriba.png", "./img/SpaceCatDerecha.png", "./img/SpaceCatAbajo.png", 30, "./sound/disparo.wav", 8]
+    ["StartLink", "#FF0000", 5, 0.10, 45, 45, "./img/disparoStarLink.png", "./img/StartLinkIzquierda.png", "./img/StartLinkArriba.png", "./img/StartLinkDerecha.png", "./img/StartLinkAbajo.png", 20, "./sound/disparoSpaceLink.wav", 5],
+    ["Black Mamba", "#52C8FD", 6, 0.20, 30, 30, "./img/disparoBlackMamba.png", "./img/BlackMambaIzquierda.png", "./img/BlackMambaArriba.png", "./img/BlackMambaDerecha.png", "./img/BlackMambaAbajo.png", 10, "./sound/disparoBlackMamba.wav", 7],
+    ["Snasa", "#00FF7E", 2, 0.25, 50, 50, "./img/disparoSnasa.png", "./img/SnasaIzquierda.png", "./img/SnasaArriba.png", "./img/SnasaDerecha.png", "./img/SnasaAbajo.png", 25, "./sound/disparoSnasa.wav", 3],
+    ["Space Cat", "#FFFFFF", 6, 0.05, 70, 70, "./img/disparoSpaceCat.png", "./img/SpaceCatIzquierda.png", "./img/SpaceCatArriba.png", "./img/SpaceCatDerecha.png", "./img/SpaceCatAbajo.png", 30, "./sound/disparoSpaceCat.wav", 8]
 ]
 
 //PINTO TODAS LAS NAVES EN LA PANTALLA DE SELECCIÓN
@@ -145,6 +145,14 @@ var imagenDisparo = new Image();
 
 //CREO VARIABLE PARA LLEVAR UN CONTEO DE LAS VIDAS
 var contador = 3;
+
+//CREO VARIABLE DE ENEMIGO
+var enemigo = new Image();
+enemigo.src = './img/enemigo.png';
+
+
+let enemigoObjeto = {x: 1000, y: 100};
+enemigoMovimientoX = 3;
 
 //CREO VARIABLE DE FIN DE JUEGO
 var portal = new Image();
@@ -272,6 +280,13 @@ const deteccionColisionDisparos = () => {
     };
 }
 
+const deteccionColisionEnemigos = () => {
+    if (naveX + naveWidth > enemigoObjeto.x && naveY < enemigoObjeto.y + 50 && naveX < enemigoObjeto.x + 50 && naveY + naveHeight > enemigoObjeto.y) {
+        resetearNave();
+        console.log(enemigoObjeto.x);
+    }
+}
+
 const pintarContador = () =>{
     contexto.beginPath();
     contexto.font = "30px Arial";
@@ -361,8 +376,7 @@ const pintarDisparo = () =>{ // RECORRO EL ARRAY DE ESPACIOS CUANDO NO ESTÁ VAC
 
 const pintarEnemigos = () => {
     contexto.beginPath();
-    contexto.rect(1300, 100, 50, 50);
-    contexto.fillStyle = "#FF00AA";
+    contexto.drawImage(enemigo, enemigoObjeto.x, enemigoObjeto.y, 50, 50);
     contexto.fill();    
     contexto.closePath();
 }
@@ -433,6 +447,15 @@ const juego = () =>{
     pintarDisparo();
     //PINTAMOS ENEMIGOS
     pintarEnemigos();
+    enemigoObjeto.x += enemigoMovimientoX;
+    //GESTIONAMOS MOVIMIENTO DE ENEMIGOS
+    if(enemigoObjeto.x >= 1350){
+        enemigoMovimientoX = -enemigoMovimientoX;
+    }
+    if(enemigoObjeto.x <= 1000){
+        enemigoMovimientoX = -enemigoMovimientoX;
+    }
+
 
     //GESTIONAMOS MOVIMIENTO DE LA NAVE
 
@@ -508,6 +531,7 @@ const juego = () =>{
     //COLISIONES
     deteccionColisionNave();
     deteccionColisionDisparos();
+    deteccionColisionEnemigos();
 
     //GANAMOS JUEGO
     ganarJuego();
