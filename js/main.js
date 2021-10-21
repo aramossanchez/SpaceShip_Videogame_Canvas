@@ -6,7 +6,7 @@
 //CREO LA CLASE NAVE, DONDE CREO EL ESQUEMA DE TODAS LAS CARACTERÍSTICAS QUE TENDRÁ LA NAVE QUE ELIJAMOS
 class Nave {
 
-    constructor(nombre, colorBrillo, velocidadMaxima, aceleracion, naveWidth, naveHeight, disparo, imagenIzquierda, imagenArriba, imagenDerecha, imagenAbajo, disparoTamaño, disparoSonido, disparoVelocidad){
+    constructor(nombre, colorBrillo, velocidadMaxima, aceleracion, naveWidth, naveHeight, disparo, municion, imagenIzquierda, imagenArriba, imagenDerecha, imagenAbajo, disparoTamaño, disparoSonido, disparoVelocidad){
         this.nombre = nombre,
         this.colorBrillo = colorBrillo,
         this.velocidadMaxima = velocidadMaxima,
@@ -14,6 +14,7 @@ class Nave {
         this.naveWidth = naveWidth,
         this.naveHeight = naveHeight,
         this.disparo = disparo,
+        this.municion = municion,
         this.imagenIzquierda = imagenIzquierda,
         this.imagenArriba = imagenArriba,
         this.imagenDerecha = imagenDerecha,
@@ -29,23 +30,23 @@ class Nave {
 
 //ARRAY CON TODAS LAS NAVES ELEGIBLES
 let navesPosibles = [
-    ["StartLink", "#FF0000", 5, 0.10, 45, 45, "./img/disparoStarLink.png", "./img/StartLinkIzquierda.png", "./img/StartLinkArriba.png", "./img/StartLinkDerecha.png", "./img/StartLinkAbajo.png", 20, "./sound/disparoSpaceLink.wav", 5],
-    ["Black Mamba", "#52C8FD", 6, 0.20, 30, 30, "./img/disparoBlackMamba.png", "./img/BlackMambaIzquierda.png", "./img/BlackMambaArriba.png", "./img/BlackMambaDerecha.png", "./img/BlackMambaAbajo.png", 10, "./sound/disparoBlackMamba.wav", 7],
-    ["Snasa", "#00FF7E", 2, 0.25, 50, 50, "./img/disparoSnasa.png", "./img/SnasaIzquierda.png", "./img/SnasaArriba.png", "./img/SnasaDerecha.png", "./img/SnasaAbajo.png", 40, "./sound/disparoSnasa.wav", 3],
-    ["Space Cat", "#FFFFFF", 6, 0.05, 70, 70, "./img/disparoSpaceCat.png", "./img/SpaceCatIzquierda.png", "./img/SpaceCatArriba.png", "./img/SpaceCatDerecha.png", "./img/SpaceCatAbajo.png", 30, "./sound/disparoSpaceCat.wav", 8]
+    ["StartLink", "#FF0000", 5, 0.10, 45, 45, "./img/disparoStarLink.png", 5, "./img/StartLinkIzquierda.png", "./img/StartLinkArriba.png", "./img/StartLinkDerecha.png", "./img/StartLinkAbajo.png", 20, "./sound/disparoSpaceLink.wav", 5],
+    ["Black Mamba", "#52C8FD", 6, 0.20, 30, 30, "./img/disparoBlackMamba.png", 10, "./img/BlackMambaIzquierda.png", "./img/BlackMambaArriba.png", "./img/BlackMambaDerecha.png", "./img/BlackMambaAbajo.png", 10, "./sound/disparoBlackMamba.wav", 7],
+    ["Snasa", "#00FF7E", 2, 0.25, 50, 50, "./img/disparoSnasa.png", 1, "./img/SnasaIzquierda.png", "./img/SnasaArriba.png", "./img/SnasaDerecha.png", "./img/SnasaAbajo.png", 40, "./sound/disparoSnasa.wav", 3],
+    ["Space Cat", "#FFFFFF", 6, 0.05, 70, 70, "./img/disparoSpaceCat.png", 3, "./img/SpaceCatIzquierda.png", "./img/SpaceCatArriba.png", "./img/SpaceCatDerecha.png", "./img/SpaceCatAbajo.png", 30, "./sound/disparoSpaceCat.wav", 8]
 ]
 
 //PINTO TODAS LAS NAVES EN LA PANTALLA DE SELECCIÓN
 for (let i = 0; i < navesPosibles.length; i++) {
-    document.getElementById(`nave${i}`).innerHTML = `<div><span>Name:</span> ${navesPosibles[i][0]}</div><img src="${navesPosibles[i][9]}"><div><span>Aceleration:</span> ${navesPosibles[i][3]*100}</div><div><span>Max Speed:</span> ${navesPosibles[i][2]*100}</div>`;
+    document.getElementById(`nave${i}`).innerHTML = `<div><span>Name:</span> ${navesPosibles[i][0]}</div><img src="${navesPosibles[i][10]}"><div><span>Aceleration:</span> ${navesPosibles[i][3]*100}</div><div><span>Max Speed:</span> ${navesPosibles[i][2]*100}</div>`;
 }
 
 //INICIALIZO LA VARIABLE DE LA NAVE ELEGIDA CON LA PRIMERA NAVE, PARA QUE CARGUE TODO EL JUEGO SIN ERRORES
-let naveElegida = new Nave(navesPosibles[0][0], navesPosibles[0][1], navesPosibles[0][2], navesPosibles[0][3], navesPosibles[0][4], navesPosibles[0][5], navesPosibles[0][6], navesPosibles[0][7], navesPosibles[0][8], navesPosibles[0][9], navesPosibles[0][10], navesPosibles[0][11], navesPosibles[0][12], navesPosibles[0][13]);
+let naveElegida = new Nave(navesPosibles[0][0], navesPosibles[0][1], navesPosibles[0][2], navesPosibles[0][3], navesPosibles[0][4], navesPosibles[0][5], navesPosibles[0][6], navesPosibles[0][7], navesPosibles[0][8], navesPosibles[0][9], navesPosibles[0][10], navesPosibles[0][11], navesPosibles[0][12], navesPosibles[0][13], navesPosibles[0][14]);
 
 const instanciarNave = (nave) => {
-    naveElegida = new Nave(navesPosibles[nave][0], navesPosibles[nave][1], navesPosibles[nave][2], navesPosibles[nave][3], navesPosibles[nave][4], navesPosibles[nave][5], navesPosibles[nave][6], navesPosibles[nave][7], navesPosibles[nave][8], navesPosibles[nave][9], navesPosibles[nave][10], navesPosibles[nave][11], navesPosibles[nave][12], navesPosibles[nave][13],);
-    console.log(naveElegida);
+    naveElegida = new Nave(navesPosibles[nave][0], navesPosibles[nave][1], navesPosibles[nave][2], navesPosibles[nave][3], navesPosibles[nave][4], navesPosibles[nave][5], navesPosibles[nave][6], navesPosibles[nave][7], navesPosibles[nave][8], navesPosibles[nave][9], navesPosibles[nave][10], navesPosibles[nave][11], navesPosibles[nave][12], navesPosibles[nave][13], navesPosibles[0][14]);
+    municionNave = navesPosibles[nave][7];
     document.getElementById("boton-jugar").style.opacity = 1;
     document.getElementById("boton-jugar").style.top = "40%";
     document.getElementById("h2-boton-jugar").innerHTML = `You have selected <span>${naveElegida.nombre}</span>. Are you sure?`
@@ -142,6 +143,8 @@ var disparos = [];
 var sonidoDisparo = new Audio();
 
 var imagenDisparo = new Image();
+
+var municionNave = 5;// SE GUARDARÁ LA MUNICIÓN MAXIMA DEL DISPARO DE LA NAVE SELECCIONADA
 
 //CREO VARIABLE PARA LLEVAR UN CONTEO DE LAS VIDAS
 var contador = 3;
@@ -323,33 +326,42 @@ const ganarJuego = () =>{
 }
 
 const disparar = () =>{ //CON CADA PULSACIÓN DE ESPACIO, GUARDO UN OBJETO DISPARO EN EL ARRAY. ESTO HACE QUE CADA DISPARO PUEDA FUNCIONAR DE MANERA INDEPENDIENTE
-    sonidoDisparo.src = naveElegida.disparoSonido;
-    sonidoDisparo.currentTime = 0.25;
-    let disparo = {
-        x: naveX+naveWidth/2-disparoWidth/2,
-        y: naveY+naveHeight/2-disparoHeight/2,//HACE QUE LOS DISPAROS SALGAN DESDE EL CENTRO DE LA NAVE
-        speedX: 0,
-        speedY: 0,
-        direccion: ""
+    if(naveElegida.municion != 0){
+        sonidoDisparo.src = naveElegida.disparoSonido;
+        sonidoDisparo.currentTime = 0.25;
+        let disparo = {
+            x: naveX+naveWidth/2-disparoWidth/2,
+            y: naveY+naveHeight/2-disparoHeight/2,//HACE QUE LOS DISPAROS SALGAN DESDE EL CENTRO DE LA NAVE
+            speedX: 0,
+            speedY: 0,
+            direccion: ""
+        }
+        if (haciaIzquierda) {
+            disparo.direccion = "izquierda";
+            velocidadX+=0.25;
+        }
+        if (haciaArriba) {
+            disparo.direccion = "arriba";
+            velocidadY+=0.25;
+        }
+        if (haciaDerecha) {
+            disparo.direccion = "derecha";
+            velocidadX-=0.25;
+        }
+        if (haciaAbajo) {
+            disparo.direccion = "abajo";
+            velocidadY-=0.25;
+        }
+        disparos.push(disparo);
+        naveElegida.municion--;
+        sonidoDisparo.play();
+    };
+};
+
+const recargar = () =>{
+    if (naveElegida.municion == 0) {
+        naveElegida.municion = municionNave;
     }
-    if (haciaIzquierda) {
-        disparo.direccion = "izquierda";
-        velocidadX+=0.25;
-    }
-    if (haciaArriba) {
-        disparo.direccion = "arriba";
-        velocidadY+=0.25;
-    }
-    if (haciaDerecha) {
-        disparo.direccion = "derecha";
-        velocidadX-=0.25;
-    }
-    if (haciaAbajo) {
-        disparo.direccion = "abajo";
-        velocidadY-=0.25;
-    }
-    disparos.push(disparo);
-    sonidoDisparo.play();
 }
 
 const pintarDisparo = () =>{ // RECORRO EL ARRAY DE ESPACIOS CUANDO NO ESTÁ VACIO Y PINTO TODOS LOS DISPAROS LANZADOS
@@ -381,6 +393,14 @@ const pintarDisparo = () =>{ // RECORRO EL ARRAY DE ESPACIOS CUANDO NO ESTÁ VAC
         }
     }
 };
+
+const pintarMunicion = () => {
+    contexto.beginPath();
+    contexto.font = "30px Arial";
+    contexto.fillStyle = "#FFBD00";
+    contexto.fillText((naveElegida.municion != 0) ? `Municion: ${ naveElegida.municion}/${municionNave}`: "¡RECARGA!", 1100, 50);
+    contexto.closePath();
+}
 
 const pintarEnemigos = () => {
     for (let i = 0; i < enemigos.length; i++) {
@@ -462,6 +482,10 @@ const levantarTecla = (e) =>{
     if(e.keyCode == 32) {// SOLTAR EL ESPACIO PROVOCA DISPARO
         disparar();
     }
+    if(e.keyCode == 17) {// SOLTAR LA TECLA CTRLIZQ PROVOCAR RECARGAR ARMA
+        recargar();
+    }
+
 }
 
 document.addEventListener("keydown", pulsarTecla, false);
@@ -490,33 +514,36 @@ const juego = () =>{
     pintarObstaculos();
     //PINTAMOS CONTADOR DE VIDAS
     pintarContador();
+    //PINTAR MUNICION
+    pintarMunicion();
     //PINTAMOS PORTAL
     pintarPortal();
     //PINTAMOS DISPARO
     pintarDisparo();
     //PINTAMOS ENEMIGOS
     pintarEnemigos();
+    //GESTIONAMOS MOVIMIENTO DE ENEMIGOS
     for (let i = 0; i < enemigos.length; i++) {
         enemigos[i].x += enemigos[i].MovimientoX;
-        console.log(enemigos[1].MovimientoX);
-        console.log(enemigos[1].x);
-        if (enemigos[0].x >= 380) {
-            enemigos[0].MovimientoX = -enemigos[0].MovimientoX;
-            enemigos[0].x = 379;
-        }
-        if (enemigos[0].x <= 40) {
-            enemigos[0].MovimientoX = -enemigos[0].MovimientoX;
-            enemigos[0].x = 41;
-        }
-        if (enemigos[1].x >= 1350) {
-            enemigos[1].MovimientoX = -enemigos[1].MovimientoX;
-            enemigos[1].x = 1349;
-        }
-        if (enemigos[1].x <= 1000) {
-            enemigos[1].MovimientoX = -enemigos[1].MovimientoX;
-            enemigos[1].x = 1001;
-        }
     }
+    // ES NECESARIO GESTIONAR CADA ENEMIGO POR SEPARADO, NO SE REALIZA CORRECTAMENTE RECORRIENDO EL ARRAY CON FOR
+    if (enemigos[0].x >= 380) {
+        enemigos[0].MovimientoX = -enemigos[0].MovimientoX;
+        enemigos[0].x = 379;
+    }
+    if (enemigos[0].x <= 40) {
+        enemigos[0].MovimientoX = -enemigos[0].MovimientoX;
+        enemigos[0].x = 41;
+    }
+    if (enemigos[1].x >= 1350) {
+        enemigos[1].MovimientoX = -enemigos[1].MovimientoX;
+        enemigos[1].x = 1349;
+    }
+    if (enemigos[1].x <= 1000) {
+        enemigos[1].MovimientoX = -enemigos[1].MovimientoX;
+        enemigos[1].x = 1001;
+    }
+    //PINTAMOS VIDA EN EL MAPA
     pintarVidaRecogible();
 
 
