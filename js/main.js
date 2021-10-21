@@ -154,6 +154,12 @@ enemigo.src = './img/enemigo.png';
 let enemigoObjeto = {x: 1000, y: 100};
 enemigoMovimientoX = 3;
 
+//CREO VARIABLE DE VIDA RECOGIBLE
+var vida = new Image();
+vida.src = './img/vida.png';
+
+let vidaRecogible = {x:canvas.width - 60, y: 30};
+
 //CREO VARIABLE DE FIN DE JUEGO
 var portal = new Image();
 portal.src = './img/portal.png';
@@ -372,14 +378,14 @@ const pintarDisparo = () =>{ // RECORRO EL ARRAY DE ESPACIOS CUANDO NO ESTÁ VAC
             }
         }
     }
-}
+};
 
 const pintarEnemigos = () => {
     contexto.beginPath();
     contexto.drawImage(enemigo, enemigoObjeto.x, enemigoObjeto.y, 50, 50);
     contexto.fill();    
     contexto.closePath();
-}
+};
 
 const colisionDisparoConEnemigo = () =>{
     for (let i = 0; i < disparos.length; i++) {
@@ -388,9 +394,32 @@ const colisionDisparoConEnemigo = () =>{
             enemigoObjeto.x = -100;
             enemigoObjeto.y = -100;
             enemigoMovimientoX = 0;
+            disparos[i].x = -100;
+            disparos[i].y = -100;
+            disparos[i].speedY = 0;
+            disparos[i].speedX = 0;
         };
     }
-}
+};
+
+const pintarVidaRecogible = () =>{
+    contexto.beginPath();
+    contexto.save();
+    contexto.shadowBlur = 25;
+    contexto.shadowColor = "#FFFF00";
+    contexto.drawImage(vida, vidaRecogible.x, vidaRecogible.y, 30, 30);
+    contexto.fill();
+    contexto.closePath();
+    contexto.restore();
+};
+
+const deteccionColisionVida = () => {
+    if (naveX + naveWidth > vidaRecogible.x && naveY < vidaRecogible.y + 30 && naveX < vidaRecogible.x + 30 && naveY + naveHeight > vidaRecogible.y) {
+        contador++;
+        vidaRecogible.x = -100;
+        vidaRecogible.y = -100;
+    }
+};
 
 //CREO EVENTOS PARA PULSACIÓN DE TECLAS Y MOVIMIENTO DE NAVE
 const pulsarTecla = (e) =>{
@@ -462,10 +491,11 @@ const juego = () =>{
     //GESTIONAMOS MOVIMIENTO DE ENEMIGOS
     if(enemigoObjeto.x >= 1350){
         enemigoMovimientoX = -enemigoMovimientoX;
-    }
+    };
     if(enemigoObjeto.x <= 1000){
         enemigoMovimientoX = -enemigoMovimientoX;
-    }
+    };
+    pintarVidaRecogible();
 
 
     //GESTIONAMOS MOVIMIENTO DE LA NAVE
@@ -544,6 +574,7 @@ const juego = () =>{
     deteccionColisionDisparos();
     deteccionColisionEnemigos();
     colisionDisparoConEnemigo();
+    deteccionColisionVida();
 
     //GANAMOS JUEGO
     ganarJuego();
