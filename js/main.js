@@ -381,6 +381,17 @@ const pintarEnemigos = () => {
     contexto.closePath();
 }
 
+const colisionDisparoConEnemigo = () =>{
+    for (let i = 0; i < disparos.length; i++) {
+        // CONTROLO LA COLISIÓN CON LOS ENEMIGOS
+        if ((disparos[i].y + disparos[i].speedY) <= enemigoObjeto.y + 50 && disparos[i].y + disparos[i].speedY + disparoHeight >= enemigoObjeto.y && disparos[i].x + disparos[i].speedX <= enemigoObjeto.x + 50 && disparos[i].x + disparos[i].speedX + disparoWidth >= enemigoObjeto.x) {
+            enemigoObjeto.x = -100;
+            enemigoObjeto.y = -100;
+            enemigoMovimientoX = 0;
+        };
+    }
+}
+
 //CREO EVENTOS PARA PULSACIÓN DE TECLAS Y MOVIMIENTO DE NAVE
 const pulsarTecla = (e) =>{
     if(e.keyCode == 37) {
@@ -532,6 +543,7 @@ const juego = () =>{
     deteccionColisionNave();
     deteccionColisionDisparos();
     deteccionColisionEnemigos();
+    colisionDisparoConEnemigo();
 
     //GANAMOS JUEGO
     ganarJuego();
