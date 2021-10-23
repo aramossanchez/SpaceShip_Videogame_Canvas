@@ -1,16 +1,32 @@
+//CLASE DONDE GESTIONO PINTAR OBJETOS EN LIENZO CANVAS Y COMPORTAMIENTOS DE DICHOS OBJETOS
+
 import Constantes from "./Constantes.js";
 let constantes = new Constantes();
 
-export default class Pintar{
+export default class ComportamientoJuego{
 
     constructor(){
+        //VARIABLES DEL MOVIMIENTO DE LA NAVE
+        this.velocidadX = 0;
+        this.velocidadY = 0;
+
+        //VARIABLES DEL PORTAL
         this.giro = 0;
         this.portal = new Image();
         this.portal.src = './img/portal.png';
+
+        //VARIABLES DE LOS ENEMIGOS
         this.enemigo = new Image();
         this.enemigo.src = './img/enemigo.png';
+        
+        //VARIABLES DE LOS OBSTACULOS
+        this.obstaculos = [];
+
+        //VARIABLES DE LOS DISPAROS
+        this.disparos = [];
     }
 
+    //PINTAR EN EL LIENZO
     pintarNave = (haciaArriba, haciaAbajo, haciaIzquierda, haciaDerecha, naveElegida, naveArriba, naveAbajo, naveIzquierda, naveDerecha, naveX, naveY, naveWidth, naveHeight) =>{    
         constantes.contexto.save()
         //BRILLO DE LA NAVE
@@ -74,7 +90,7 @@ export default class Pintar{
         constantes.contexto.closePath();
     };
 
-    pintarObstaculos = (obstaculos) =>{
+    pintarObstaculos = () =>{
         constantes.obstaculoMarginRight = 100;
         for (let i = 0; i < 5; i++) {// GUARDO OBJETOS EN UN ARRAY CON LAS POSICIONES QUE TENDRÁN LOS OBSTACULOS
             if (i%2 == 0) {// CREO LA ALTURA VARIABLE DE LOS OBSTACULOS
@@ -82,12 +98,12 @@ export default class Pintar{
             }else{
                 constantes.obstaculoMarginTop = 0;
             }
-            obstaculos[i] = {x:constantes.obstaculoUnoX + constantes.obstaculoMarginRight, y: constantes.obstaculoUnoY + constantes.obstaculoMarginTop};
+            this.obstaculos[i] = {x:constantes.obstaculoUnoX + constantes.obstaculoMarginRight, y: constantes.obstaculoUnoY + constantes.obstaculoMarginTop};
             constantes.obstaculoMarginRight += 250;
         }
-        for (let i = 0; i < obstaculos.length; i++) {// GENERO LOS OBSTACULOS CON LAS POSICIONES GUARDADAS EN EL ARRAY DE OBJETOS
+        for (let i = 0; i < this.obstaculos.length; i++) {// GENERO LOS OBSTACULOS CON LAS POSICIONES GUARDADAS EN EL ARRAY DE OBJETOS
             constantes.contexto.beginPath();
-            constantes.contexto.rect(obstaculos[i].x, obstaculos[i].y, constantes.obstaculoUnoWidth, constantes.obstaculoUnoHeight);
+            constantes.contexto.rect(this.obstaculos[i].x, this.obstaculos[i].y, constantes.obstaculoUnoWidth, constantes.obstaculoUnoHeight);
             constantes.contexto.fillStyle = "#8B0200";
             constantes.contexto.fill();
             constantes.contexto.closePath();
@@ -123,28 +139,28 @@ export default class Pintar{
         this.giro += 10;
     };
 
-    pintarDisparo = (disparos, disparoHeight, disparoWidth, imagenDisparo, naveElegida) =>{
-        // RECORRO EL ARRAY DE DISPAROS CUANDO NO ESTÁ VACIO Y PINTO TODOS LOS DISPAROS LANZADOS
-        if (disparos.length != 0) {
-            for (let i = 0; i < disparos.length; i++) {
+    pintarDisparo = (disparoHeight, disparoWidth, imagenDisparo, naveElegida) =>{
+        // RECORRO EL ARRAY DE DISPAROS CUANDO NO ESTÁ VACIO Y PINTO TODOS LOS this.DISPAROS LANZADOS
+        if (this.disparos.length != 0) {
+            for (let i = 0; i < this.disparos.length; i++) {
                 // CONTROLO LA COLISIÓN CON LOS BORDES
-                if ((disparos[i].y + disparos[i].speedY) >= (0 + constantes.bordeArribaHeight) && (disparos[i].y + disparos[i].speedY) <= (constantes.canvas.height - constantes.bordeAbajoHeight- disparoHeight) && disparos[i].x + disparos[i].speedX > 0 + constantes.bordeIzquierdaWidth && disparos[i].x + disparos[i].speedX < constantes.canvas.width - constantes.bordeDerechaWidth - disparoWidth) {
+                if ((this.disparos[i].y + this.disparos[i].speedY) >= (0 + constantes.bordeArribaHeight) && (this.disparos[i].y + this.disparos[i].speedY) <= (constantes.canvas.height - constantes.bordeAbajoHeight- disparoHeight) && this.disparos[i].x + this.disparos[i].speedX > 0 + constantes.bordeIzquierdaWidth && this.disparos[i].x + this.disparos[i].speedX < constantes.canvas.width - constantes.bordeDerechaWidth - disparoWidth) {
                     constantes.contexto.beginPath();
-                    constantes.contexto.drawImage(imagenDisparo, disparos[i].x + disparos[i].speedX, disparos[i].y + disparos[i].speedY, disparoWidth, disparoHeight);
+                    constantes.contexto.drawImage(imagenDisparo, this.disparos[i].x + this.disparos[i].speedX, this.disparos[i].y + this.disparos[i].speedY, disparoWidth, disparoHeight);
                     constantes.contexto.fill();    
                     constantes.contexto.closePath();
-                    switch (disparos[i].direccion) {
+                    switch (this.disparos[i].direccion) {
                         case "izquierda":
-                            disparos[i].speedX -= naveElegida.disparoVelocidad;
+                            this.disparos[i].speedX -= naveElegida.disparoVelocidad;
                             break;
                         case "arriba":
-                            disparos[i].speedY -= naveElegida.disparoVelocidad;
+                            this.disparos[i].speedY -= naveElegida.disparoVelocidad;
                             break;
                         case "derecha":
-                            disparos[i].speedX += naveElegida.disparoVelocidad;
+                            this.disparos[i].speedX += naveElegida.disparoVelocidad;
                             break;
                         case "abajo":
-                            disparos[i].speedY += naveElegida.disparoVelocidad;
+                            this.disparos[i].speedY += naveElegida.disparoVelocidad;
                             break;
                         default:
                             break;
@@ -172,6 +188,44 @@ export default class Pintar{
         constantes.contexto.fill();
         constantes.contexto.closePath();
         constantes.contexto.restore();
+    };
+    
+    //COLISIONES
+    deteccionColisionNave = (naveElegida) => {
+        for (let i = 0; i < this.obstaculos.length; i++) {// RECORRO EL ARRAY DE OBJETOS E INDICO LAS COLISIONES PARA CADA UNO DE LOS OBJETOS GUARDADOS
+            if(naveElegida.naveX + naveElegida.naveHeight > this.obstaculos[i].x && naveElegida.naveX < this.obstaculos[i].x + constantes.obstaculoUnoWidth && naveElegida.naveY + naveElegida.naveHeight > this.obstaculos[i].y && naveElegida.naveY < this.obstaculos[i].y + constantes.obstaculoUnoHeight){
+                resetearNave();
+            };
+        }
+    }
+
+    deteccionColisionDisparos = (disparoWidth, disparoHeight) => {
+        for (let i = 0; i < this.obstaculos.length; i++) {// RECORRO EL ARRAY DE OBSTACULOS
+            for (let a = 0; a < this.disparos.length; a++) {// RECORRO EL ARRAY DE DISPAROS            
+                if(this.disparos[a].x + this.disparos[a].speedX > this.obstaculos[i].x - disparoWidth && this.disparos[a].x + this.disparos[a].speedX < this.obstaculos[i].x + constantes.obstaculoUnoWidth && this.disparos[a].y + this.disparos[a].speedY > this.obstaculos[i].y - disparoHeight && this.disparos[a].y + this.disparos[a].speedY < this.obstaculos[i].y + constantes.obstaculoUnoHeight){
+                    this.disparos[a].x = -100;
+                    this.disparos[a].y = -100;
+                };
+            };
+        };
+    };
+
+    colisionDisparoConEnemigo = (disparoHeight, disparoWidth, enemigos) =>{
+        for (let i = 0; i < this.disparos.length; i++) {
+            for (let a = 0; a < enemigos.length; a++) {
+                // CONTROLO LA COLISIÓN CON LOS ENEMIGOS
+                if ((this.disparos[i].y + this.disparos[i].speedY) <= enemigos[a].y + 50 && this.disparos[i].y + this.disparos[i].speedY + disparoHeight >= enemigos[a].y && this.disparos[i].x + this.disparos[i].speedX <= enemigos[a].x + 50 && this.disparos[i].x + this.disparos[i].speedX + disparoWidth >= enemigos[a].x) {
+                    enemigos[a].x = -100;
+                    enemigos[a].y = -100;
+                    enemigos[a].MovimientoX = 0;
+                    this.disparos[i].x = -100;
+                    this.disparos[i].y = -100;
+                    this.disparos[i].speedY = 0;
+                    this.disparos[i].speedX = 0;
+                };
+            }
+            
+        }
     };
 
 };

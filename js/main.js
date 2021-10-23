@@ -9,8 +9,10 @@ import Constantes from "./Constantes.js";
 let constantes = new Constantes();
 
 //IMPORTO FUNCIONES PARA DIBUJAR OBJETOS EN LIENZO
-import Pintar from "./Pintar.js";
-let pintar = new Pintar();
+import ComportamientoJuego from "./ComportamientoJuego.js";
+let comportamientoJuego = new ComportamientoJuego();
+
+//IMPORTO LA CLASE JUEGO
 
 //MUESTRO TODAS LAS NAVES EN LA PANTALLA DE SELECCIÓN
 for (let i = 0; i < constantes.navesPosibles.length; i++) {
@@ -32,8 +34,6 @@ const instanciarNave = (nave) => {
         casillasSeleccionNave[i].style.opacity = 0.5;
     };
 };
-
-console.log(naveElegida);
 
 //VARIABLES Y METODO PARA GESTIÓN DE CAMBIO DE PANTALLAS
 let pantallas = [document.getElementById("pantalla-seleccion"), document.getElementById("game")];
@@ -62,12 +62,7 @@ var naveIzquierda = new Image();
 
 var naveDerecha = new Image();
 
-//VARIABLES DE OBSTACULOS
-let obstaculos = [];
-
 //CREO VARIABLES PARA EL MOVIMIENTO DE LA NAVE
-var velocidadX = 0;
-var velocidadY = 0;
 
 var izquierdaPulsado = false;
 var derechaPulsado = false;
@@ -83,8 +78,6 @@ var haciaAbajo = false;
 
 var disparoWidth = 0;
 var disparoHeight = 0;
-
-var disparos = [];
 
 var sonidoDisparo = new Audio();
 
@@ -112,37 +105,19 @@ const resetearNave = () =>{
     contador--;
     naveElegida.naveX = 50;
     naveElegida.naveY = 550;
-    velocidadX = 0;
-    velocidadY = 0;
+    comportamientoJuego.velocidadX = 0;
+    comportamientoJuego.velocidadY = 0;
     haciaDerecha = false;
     haciaIzquierda = false;
     haciaArriba = true;
     haciaAbajo = false;
-    disparos = [];
+    comportamientoJuego.disparos = [];
     if (contador < 0) {
         window.location.reload();
     }
 };
 
-//COLISIONES
-const deteccionColisionNave = () => {
-    for (let i = 0; i < obstaculos.length; i++) {// RECORRO EL ARRAY DE OBJETOS E INDICO LAS COLISIONES PARA CADA UNO DE LOS OBJETOS GUARDADOS
-        if(naveElegida.naveX + naveElegida.naveHeight > obstaculos[i].x && naveElegida.naveX < obstaculos[i].x + constantes.obstaculoUnoWidth && naveElegida.naveY + naveElegida.naveHeight > obstaculos[i].y && naveElegida.naveY < obstaculos[i].y + constantes.obstaculoUnoHeight){
-            resetearNave();
-        };
-    }
-}
 
-const deteccionColisionDisparos = () => {
-    for (let i = 0; i < obstaculos.length; i++) {// RECORRO EL ARRAY DE OBSTACULOS
-        for (let a = 0; a < disparos.length; a++) {// RECORRO EL ARRAY DE DISPAROS            
-            if(disparos[a].x + disparos[a].speedX > obstaculos[i].x - disparoWidth && disparos[a].x + disparos[a].speedX < obstaculos[i].x + constantes.obstaculoUnoWidth && disparos[a].y + disparos[a].speedY > obstaculos[i].y - disparoHeight && disparos[a].y + disparos[a].speedY < obstaculos[i].y + constantes.obstaculoUnoHeight){
-                disparos[a].x = -100;
-                disparos[a].y = -100;
-            };
-        };
-    };
-};
 
 const deteccionColisionEnemigos = () => {
     for (let i = 0; i < enemigos.length; i++) {
@@ -171,21 +146,21 @@ const disparar = () =>{ //CON CADA PULSACIÓN DE ESPACIO, GUARDO UN OBJETO DISPA
         }
         if (haciaIzquierda) {
             disparo.direccion = "izquierda";
-            velocidadX+=0.25;
+            comportamientoJuego.velocidadX+=0.25;
         }
         if (haciaArriba) {
             disparo.direccion = "arriba";
-            velocidadY+=0.25;
+            comportamientoJuego.velocidadY+=0.25;
         }
         if (haciaDerecha) {
             disparo.direccion = "derecha";
-            velocidadX-=0.25;
+            comportamientoJuego.velocidadX-=0.25;
         }
         if (haciaAbajo) {
             disparo.direccion = "abajo";
-            velocidadY-=0.25;
+            comportamientoJuego.velocidadY-=0.25;
         }
-        disparos.push(disparo);
+        comportamientoJuego.disparos.push(disparo);
         naveElegida.municion--;
         sonidoDisparo.play();
     };
@@ -194,24 +169,6 @@ const disparar = () =>{ //CON CADA PULSACIÓN DE ESPACIO, GUARDO UN OBJETO DISPA
 const recargar = () =>{
     if (naveElegida.municion == 0) {
         naveElegida.municion = municionNave;
-    }
-}
-
-const colisionDisparoConEnemigo = () =>{
-    for (let i = 0; i < disparos.length; i++) {
-        for (let a = 0; a < enemigos.length; a++) {
-            // CONTROLO LA COLISIÓN CON LOS ENEMIGOS
-            if ((disparos[i].y + disparos[i].speedY) <= enemigos[a].y + 50 && disparos[i].y + disparos[i].speedY + disparoHeight >= enemigos[a].y && disparos[i].x + disparos[i].speedX <= enemigos[a].x + 50 && disparos[i].x + disparos[i].speedX + disparoWidth >= enemigos[a].x) {
-                enemigos[a].x = -100;
-                enemigos[a].y = -100;
-                enemigos[a].MovimientoX = 0;
-                disparos[i].x = -100;
-                disparos[i].y = -100;
-                disparos[i].speedY = 0;
-                disparos[i].speedX = 0;
-            };
-        }
-        
     }
 };
 
@@ -281,31 +238,31 @@ const juego = () =>{
     disparoHeight = naveElegida.disparoTamaño;
 
     //PINTAMOS NAVE
-    pintar.pintarNave(haciaArriba, haciaAbajo, haciaIzquierda, haciaDerecha, naveElegida, naveArriba, naveAbajo, naveIzquierda, naveDerecha, naveElegida.naveX, naveElegida.naveY, naveWidth, naveHeight);
+    comportamientoJuego.pintarNave(haciaArriba, haciaAbajo, haciaIzquierda, haciaDerecha, naveElegida, naveArriba, naveAbajo, naveIzquierda, naveDerecha, naveElegida.naveX, naveElegida.naveY, naveWidth, naveHeight);
     
     //PINTAMOS BORDES
-    pintar.pintarBordes();
+    comportamientoJuego.pintarBordes();
     
     //PINTAMOS PRIMER OBSTACULO
-    pintar.pintarObstaculos(obstaculos);
+    comportamientoJuego.pintarObstaculos();
     
     //PINTAMOS CONTADOR DE VIDAS
-    pintar.pintarContador(contador);
+    comportamientoJuego.pintarContador(contador);
     
     //PINTAR MUNICION
-    pintar.pintarMunicion(naveElegida, municionNave);
+    comportamientoJuego.pintarMunicion(naveElegida, municionNave);
     
     //PINTAMOS PORTAL
-    pintar.pintarPortal();
+    comportamientoJuego.pintarPortal();
     
     //PINTAMOS DISPARO
-    pintar.pintarDisparo(disparos, disparoHeight, disparoWidth, imagenDisparo, naveElegida);
+    comportamientoJuego.pintarDisparo(disparoHeight, disparoWidth, imagenDisparo, naveElegida);
     
     //PINTAMOS ENEMIGOS
-    pintar.pintarEnemigos(enemigos);
+    comportamientoJuego.pintarEnemigos(enemigos);
     
     //PINTAMOS VIDA EN EL MAPA
-    pintar.pintarVidaRecogible(vida, vidaRecogible);
+    comportamientoJuego.pintarVidaRecogible(vida, vidaRecogible);
     
     //GESTIONAMOS MOVIMIENTO DE ENEMIGOS
     for (let i = 0; i < enemigos.length; i++) {
@@ -334,13 +291,13 @@ const juego = () =>{
         haciaAbajo = false;
         haciaIzquierda = true;
         haciaDerecha = false;
-        if (velocidadX > -naveElegida.velocidadMaxima){
-            velocidadX -= naveElegida.aceleracion;
+        if (comportamientoJuego.velocidadX > -naveElegida.velocidadMaxima){
+            comportamientoJuego.velocidadX -= naveElegida.aceleracion;
         };
-        naveElegida.naveX += velocidadX;
+        naveElegida.naveX += comportamientoJuego.velocidadX;
     };
     if(!izquierdaPulsado){
-        naveElegida.naveX += velocidadX;
+        naveElegida.naveX += comportamientoJuego.velocidadX;
     };
     if(naveElegida.naveX <= 0 + constantes.bordeIzquierdaWidth){
         resetearNave();
@@ -351,13 +308,13 @@ const juego = () =>{
         haciaAbajo = false;
         haciaIzquierda = false;
         haciaDerecha = false;
-        if (velocidadY > -naveElegida.velocidadMaxima){
-            velocidadY -= naveElegida.aceleracion;
+        if (comportamientoJuego.velocidadY > -naveElegida.velocidadMaxima){
+            comportamientoJuego.velocidadY -= naveElegida.aceleracion;
         };
-        naveElegida.naveY += velocidadY;
+        naveElegida.naveY += comportamientoJuego.velocidadY;
     };
     if(!arribaPulsado){
-        naveElegida.naveY += velocidadY;
+        naveElegida.naveY += comportamientoJuego.velocidadY;
     };
     if(naveElegida.naveY <= 0 + constantes.bordeArribaHeight){
         resetearNave();
@@ -368,13 +325,13 @@ const juego = () =>{
         haciaAbajo = false;
         haciaIzquierda = false;
         haciaDerecha = true;
-        if (velocidadX < naveElegida.velocidadMaxima){
-            velocidadX += naveElegida.aceleracion;
+        if (comportamientoJuego.velocidadX < naveElegida.velocidadMaxima){
+            comportamientoJuego.velocidadX += naveElegida.aceleracion;
         }
-        naveElegida.naveX += velocidadX;
+        naveElegida.naveX += comportamientoJuego.velocidadX;
     };
     if(!derechaPulsado){
-        naveElegida.naveX += velocidadX;
+        naveElegida.naveX += comportamientoJuego.velocidadX;
     };
     if(naveElegida.naveX >= constantes.canvas.width - naveHeight - constantes.bordeDerechaWidth){
         resetearNave();
@@ -385,23 +342,23 @@ const juego = () =>{
         haciaAbajo = true;
         haciaIzquierda = false;
         haciaDerecha = false;
-        if (velocidadY < naveElegida.velocidadMaxima){
-            velocidadY += naveElegida.aceleracion;
+        if (comportamientoJuego.velocidadY < naveElegida.velocidadMaxima){
+            comportamientoJuego.velocidadY += naveElegida.aceleracion;
         };
-        naveElegida.naveY += velocidadY;
+        naveElegida.naveY += comportamientoJuego.velocidadY;
     };
     if(!abajoPulsado){
-        naveElegida.naveY += velocidadY;
+        naveElegida.naveY += comportamientoJuego.velocidadY;
     };
     if(naveElegida.naveY >= constantes.canvas.height - naveHeight - constantes.bordeAbajoHeight){
         resetearNave();
     };
 
     //COLISIONES
-    deteccionColisionNave();
-    deteccionColisionDisparos();
-    deteccionColisionEnemigos();
-    colisionDisparoConEnemigo();
+    comportamientoJuego.deteccionColisionNave(naveElegida);
+    comportamientoJuego.deteccionColisionDisparos(disparoWidth, disparoHeight);
+    deteccionColisionEnemigos(enemigos);
+    comportamientoJuego.colisionDisparoConEnemigo(disparoHeight, disparoWidth, enemigos);
     deteccionColisionVida();
 
     //GANAMOS JUEGO

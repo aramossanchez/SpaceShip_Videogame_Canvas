@@ -20,4 +20,5 @@ export default class Nave {
         this.disparoSonido = disparoSonido,
         this.disparoVelocidad = disparoVelocidad
     };
+    
 };
