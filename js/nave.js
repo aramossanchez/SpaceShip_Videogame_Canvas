@@ -1,8 +1,10 @@
 //CREO LA CLASE NAVE, DONDE CREO EL ESQUEMA DE TODAS LAS CARACTERÍSTICAS QUE TENDRÁ LA NAVE QUE ELIJAMOS
 export default class Nave {
 
-    constructor(nombre, colorBrillo, velocidadMaxima, aceleracion, naveWidth, naveHeight, disparo, municion, imagenIzquierda, imagenArriba, imagenDerecha, imagenAbajo, disparoTamaño, disparoSonido, disparoVelocidad){
+    constructor(nombre, naveX, naveY, colorBrillo, velocidadMaxima, aceleracion, naveWidth, naveHeight, disparo, municion, imagenIzquierda, imagenArriba, imagenDerecha, imagenAbajo, disparoTamaño, disparoSonido, disparoVelocidad){
         this.nombre = nombre,
+        this.naveX = naveX,
+        this.naveY = naveY,
         this.colorBrillo = colorBrillo,
         this.velocidadMaxima = velocidadMaxima,
         this.aceleracion = aceleracion,

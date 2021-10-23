@@ -12,18 +12,21 @@ let constantes = new Constantes();
 import Pintar from "./Pintar.js";
 let pintar = new Pintar();
 
+//IMPORTO CLASE PARA CREAR TODAS LAS VARIABLES DEL JUEGO (NAVE, DISPAROS)
+
+
 
 //MUESTRO TODAS LAS NAVES EN LA PANTALLA DE SELECCIÓN
 for (let i = 0; i < constantes.navesPosibles.length; i++) {
-    document.getElementById(`nave${i}`).innerHTML = `<div><span>Name:</span> ${constantes.navesPosibles[i][0]}</div><img src="${constantes.navesPosibles[i][10]}"><div><span>Aceleration:</span> ${constantes.navesPosibles[i][3]*100}</div><div><span>Max Speed:</span> ${constantes.navesPosibles[i][2]*100}</div>`;
+    document.getElementById(`nave${i}`).innerHTML = `<div><span>Name:</span> ${constantes.navesPosibles[i][0]}</div><img src="${constantes.navesPosibles[i][12]}"><div><span>Aceleration:</span> ${constantes.navesPosibles[i][5]*100}</div><div><span>Max Speed:</span> ${constantes.navesPosibles[i][4]*100}</div>`;
 }
 
 //INICIALIZO LA VARIABLE DE LA NAVE ELEGIDA CON LA PRIMERA NAVE, PARA QUE CARGUE TODO EL JUEGO SIN ERRORES
-let naveElegida = new Nave(constantes.navesPosibles[0][0], constantes.navesPosibles[0][1], constantes.navesPosibles[0][2], constantes.navesPosibles[0][3], constantes.navesPosibles[0][4], constantes.navesPosibles[0][5], constantes.navesPosibles[0][6], constantes.navesPosibles[0][7], constantes.navesPosibles[0][8], constantes.navesPosibles[0][9], constantes.navesPosibles[0][10], constantes.navesPosibles[0][11], constantes.navesPosibles[0][12], constantes.navesPosibles[0][13], constantes.navesPosibles[0][14]);
+let naveElegida = new Nave(constantes.navesPosibles[0][0], constantes.navesPosibles[0][1], constantes.navesPosibles[0][2], constantes.navesPosibles[0][3], constantes.navesPosibles[0][4], constantes.navesPosibles[0][5], constantes.navesPosibles[0][6], constantes.navesPosibles[0][7], constantes.navesPosibles[0][8], constantes.navesPosibles[0][9], constantes.navesPosibles[0][10], constantes.navesPosibles[0][11], constantes.navesPosibles[0][12], constantes.navesPosibles[0][13], constantes.navesPosibles[0][14], constantes.navesPosibles[0][15], constantes.navesPosibles[0][16]);
 
 const instanciarNave = (nave) => {
-    naveElegida = new Nave(constantes.navesPosibles[nave][0], constantes.navesPosibles[nave][1], constantes.navesPosibles[nave][2], constantes.navesPosibles[nave][3], constantes.navesPosibles[nave][4], constantes.navesPosibles[nave][5], constantes.navesPosibles[nave][6], constantes.navesPosibles[nave][7], constantes.navesPosibles[nave][8], constantes.navesPosibles[nave][9], constantes.navesPosibles[nave][10], constantes.navesPosibles[nave][11], constantes.navesPosibles[nave][12], constantes.navesPosibles[nave][13], constantes.navesPosibles[0][14]);
-    municionNave = constantes.navesPosibles[nave][7]; //GUARDO LA MUNICION MAXIMA DE LA NAVE EN UNA VARIABLE A PARTE (CLAVE PARA PODER TENER SISTEMA DE RECARGA DE MUNICION)
+    naveElegida = new Nave(constantes.navesPosibles[nave][0], constantes.navesPosibles[nave][1], constantes.navesPosibles[nave][2], constantes.navesPosibles[nave][3], constantes.navesPosibles[nave][4], constantes.navesPosibles[nave][5], constantes.navesPosibles[nave][6], constantes.navesPosibles[nave][7], constantes.navesPosibles[nave][8], constantes.navesPosibles[nave][9], constantes.navesPosibles[nave][10], constantes.navesPosibles[nave][11], constantes.navesPosibles[nave][12], constantes.navesPosibles[nave][13], constantes.navesPosibles[nave][14], constantes.navesPosibles[nave][15], constantes.navesPosibles[nave][16]);
+    municionNave = constantes.navesPosibles[nave][9]; //GUARDO LA MUNICION MAXIMA DE LA NAVE EN UNA VARIABLE A PARTE (CLAVE PARA PODER TENER SISTEMA DE RECARGA DE MUNICION)
     document.getElementById("boton-jugar").style.opacity = 1;
     document.getElementById("boton-jugar").style.top = "40%";
     document.getElementById("h2-boton-jugar").innerHTML = `You have selected <span>${naveElegida.nombre}</span>. Are you sure?`
@@ -33,6 +36,8 @@ const instanciarNave = (nave) => {
         casillasSeleccionNave[i].style.opacity = 0.5;
     };
 };
+
+console.log(naveElegida);
 
 //VARIABLES Y METODO PARA GESTIÓN DE CAMBIO DE PANTALLAS
 let pantallas = [document.getElementById("pantalla-seleccion"), document.getElementById("game")];
@@ -49,13 +54,7 @@ const cerrarMensaje = () => {
         casillasSeleccionNave[i].style.pointerEvents = "initial";
         casillasSeleccionNave[i].style.opacity = 1;
     }
-}
-
-
-//CREO VARIABLES PARA LA NAVE
-var naveHeight = 0;
-var naveX = 50;
-var naveY = 550;
+};
 
 //TRAIGO IMAGEN DE LA NAVE
 var naveArriba = new Image();
@@ -123,8 +122,8 @@ let vidaRecogible = {x:constantes.canvas.width/2 - 35, y: 100};
  ////////////////////////////////////////////////////////////////////////////////////
 const resetearNave = () =>{
     contador--;
-    naveX = 50;
-    naveY = 550;
+    naveElegida.naveX = 50;
+    naveElegida.naveY = 550;
     velocidadX = 0;
     velocidadY = 0;
     haciaDerecha = false;
@@ -140,7 +139,7 @@ const resetearNave = () =>{
 //COLISIONES
 const deteccionColisionNave = () => {
     for (let i = 0; i < obstaculos.length; i++) {// RECORRO EL ARRAY DE OBJETOS E INDICO LAS COLISIONES PARA CADA UNO DE LOS OBJETOS GUARDADOS
-        if(naveX + naveHeight > obstaculos[i].x && naveX < obstaculos[i].x + obstaculoUnoWidth && naveY + naveHeight > obstaculos[i].y && naveY < obstaculos[i].y + obstaculoUnoHeight){
+        if(naveElegida.naveX + naveElegida.naveHeight > obstaculos[i].x && naveElegida.naveX < obstaculos[i].x + obstaculoUnoWidth && naveElegida.naveY + naveElegida.naveHeight > obstaculos[i].y && naveElegida.naveY < obstaculos[i].y + obstaculoUnoHeight){
             resetearNave();
         };
     }
@@ -155,18 +154,18 @@ const deteccionColisionDisparos = () => {
             };
         };
     };
-}
-console.log(naveWidth);
+};
+
 const deteccionColisionEnemigos = () => {
     for (let i = 0; i < enemigos.length; i++) {
-        if (naveX + naveWidth > enemigos[i].x && naveY < enemigos[i].y + 50 && naveX < enemigos[i].x + 50 && naveY + naveHeight > enemigos[i].y) {
+        if (naveElegida.naveX + naveElegida.naveWidth > enemigos[i].x && naveElegida.naveY < enemigos[i].y + 50 && naveElegida.naveX < enemigos[i].x + 50 && naveElegida.naveY + naveElegida.naveHeight > enemigos[i].y) {
             resetearNave();
         };
     }
-}
+};
 
 const ganarJuego = () =>{
-    if (naveX + naveHeight > constantes.canvas.width - 100 && naveX < constantes.canvas.width - 100 + 1 && naveY + naveHeight > constantes.canvas.height - 100 && naveY < constantes.canvas.height - 100 + 1){
+    if (naveElegida.naveX + naveElegida.naveHeight > constantes.canvas.width - 100 && naveElegida.naveX < constantes.canvas.width - 100 + 1 && naveElegida.naveY + naveElegida.naveHeight > constantes.canvas.height - 100 && naveElegida.naveY < constantes.canvas.height - 100 + 1){
         alert("WIN");
     }
 }
@@ -176,8 +175,8 @@ const disparar = () =>{ //CON CADA PULSACIÓN DE ESPACIO, GUARDO UN OBJETO DISPA
         sonidoDisparo.src = naveElegida.disparoSonido;
         sonidoDisparo.currentTime = 0.25;
         let disparo = {
-            x: naveX+naveWidth/2-disparoWidth/2,
-            y: naveY+naveHeight/2-disparoHeight/2,//HACE QUE LOS DISPAROS SALGAN DESDE EL CENTRO DE LA NAVE
+            x: naveElegida.naveX + naveElegida.naveWidth/2 - disparoWidth/2,
+            y: naveElegida.naveY+ naveElegida.naveHeight/2 - disparoHeight/2,//HACE QUE LOS DISPAROS SALGAN DESDE EL CENTRO DE LA NAVE
             speedX: 0,
             speedY: 0,
             direccion: ""
@@ -214,8 +213,6 @@ const colisionDisparoConEnemigo = () =>{
     for (let i = 0; i < disparos.length; i++) {
         for (let a = 0; a < enemigos.length; a++) {
             // CONTROLO LA COLISIÓN CON LOS ENEMIGOS
-            console.log("soy los disparos " + disparos[i]);
-            console.log(enemigos[a]);
             if ((disparos[i].y + disparos[i].speedY) <= enemigos[a].y + 50 && disparos[i].y + disparos[i].speedY + disparoHeight >= enemigos[a].y && disparos[i].x + disparos[i].speedX <= enemigos[a].x + 50 && disparos[i].x + disparos[i].speedX + disparoWidth >= enemigos[a].x) {
                 enemigos[a].x = -100;
                 enemigos[a].y = -100;
@@ -231,7 +228,7 @@ const colisionDisparoConEnemigo = () =>{
 };
 
 const deteccionColisionVida = () => {
-    if (naveX + naveWidth > vidaRecogible.x && naveY < vidaRecogible.y + 30 && naveX < vidaRecogible.x + 30 && naveY + naveHeight > vidaRecogible.y) {
+    if (naveElegida.naveX + naveElegida.naveWidth > vidaRecogible.x && naveElegida.naveY < vidaRecogible.y + 30 && naveElegida.naveX < vidaRecogible.x + 30 && naveElegida.naveY + naveElegida.naveHeight > vidaRecogible.y) {
         contador++;
         vidaRecogible.x = -100;
         vidaRecogible.y = -100;
@@ -286,7 +283,7 @@ const juego = () =>{
 
     // ASIGNAMOS VALORES A LAS VARIABLES QUE DEPENDEN DE QUÉ NAVE HAYAMOS ELEGIDO
     let naveWidth = naveElegida.naveWidth;
-    naveHeight = naveElegida.naveHeight;
+    let naveHeight = naveElegida.naveHeight;
     naveArriba.src = naveElegida.imagenArriba;
     naveAbajo.src = naveElegida.imagenAbajo;
     naveIzquierda.src = naveElegida.imagenIzquierda;
@@ -296,7 +293,7 @@ const juego = () =>{
     disparoHeight = naveElegida.disparoTamaño;
 
     //PINTAMOS NAVE
-    pintar.pintarNave(haciaArriba, haciaAbajo, haciaIzquierda, haciaDerecha, naveElegida, naveArriba, naveAbajo, naveIzquierda, naveDerecha, naveX, naveY, naveWidth, naveHeight);
+    pintar.pintarNave(haciaArriba, haciaAbajo, haciaIzquierda, haciaDerecha, naveElegida, naveArriba, naveAbajo, naveIzquierda, naveDerecha, naveElegida.naveX, naveElegida.naveY, naveWidth, naveHeight);
     
     //PINTAMOS BORDES
     pintar.pintarBordes();
@@ -352,12 +349,12 @@ const juego = () =>{
         if (velocidadX > -naveElegida.velocidadMaxima){
             velocidadX -= naveElegida.aceleracion;
         };
-        naveX += velocidadX;
+        naveElegida.naveX += velocidadX;
     };
     if(!izquierdaPulsado){
-        naveX += velocidadX;
+        naveElegida.naveX += velocidadX;
     };
-    if(naveX <= 0 + constantes.bordeIzquierdaWidth){
+    if(naveElegida.naveX <= 0 + constantes.bordeIzquierdaWidth){
         resetearNave();
     }
     //MOVIMIENTO HACIA ARRIBA
@@ -369,12 +366,12 @@ const juego = () =>{
         if (velocidadY > -naveElegida.velocidadMaxima){
             velocidadY -= naveElegida.aceleracion;
         };
-        naveY += velocidadY;
+        naveElegida.naveY += velocidadY;
     };
     if(!arribaPulsado){
-        naveY += velocidadY;
+        naveElegida.naveY += velocidadY;
     };
-    if(naveY <= 0 + constantes.bordeArribaHeight){
+    if(naveElegida.naveY <= 0 + constantes.bordeArribaHeight){
         resetearNave();
     }
     //MOVIMIENTO HACIA DERECHA
@@ -386,12 +383,12 @@ const juego = () =>{
         if (velocidadX < naveElegida.velocidadMaxima){
             velocidadX += naveElegida.aceleracion;
         }
-        naveX += velocidadX;
+        naveElegida.naveX += velocidadX;
     };
     if(!derechaPulsado){
-        naveX += velocidadX;
+        naveElegida.naveX += velocidadX;
     };
-    if(naveX >= constantes.canvas.width - naveHeight - constantes.bordeDerechaWidth){
+    if(naveElegida.naveX >= constantes.canvas.width - naveHeight - constantes.bordeDerechaWidth){
         resetearNave();
     }
     //MOVIMIENTO HACIA ABAJO
@@ -403,12 +400,12 @@ const juego = () =>{
         if (velocidadY < naveElegida.velocidadMaxima){
             velocidadY += naveElegida.aceleracion;
         };
-        naveY += velocidadY;
+        naveElegida.naveY += velocidadY;
     };
     if(!abajoPulsado){
-        naveY += velocidadY;
+        naveElegida.naveY += velocidadY;
     };
-    if(naveY >= constantes.canvas.height - naveHeight - constantes.bordeAbajoHeight){
+    if(naveElegida.naveY >= constantes.canvas.height - naveHeight - constantes.bordeAbajoHeight){
         resetearNave();
     };
 
