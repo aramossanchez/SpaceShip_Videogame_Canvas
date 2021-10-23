@@ -1,5 +1,9 @@
 export default class Pintar{
 
+    constructor(){
+        this.giro = 0;
+    }
+
     pintarNave = (contexto, haciaArriba, haciaAbajo, haciaIzquierda, haciaDerecha, naveElegida, naveArriba, naveAbajo, naveIzquierda, naveDerecha, naveX, naveY, naveWidth, naveHeight) =>{    
         contexto.save()
         //BRILLO DE LA NAVE
@@ -99,16 +103,17 @@ export default class Pintar{
         contexto.closePath();
     };
 
-    pintarPortal = (giro, contexto, canvas, portal) =>{
+    pintarPortal = (contexto, canvas, portal) =>{
         contexto.save();
         contexto.beginPath();
         contexto.shadowBlur = 55;
         contexto.shadowColor = "#0000FF";
         contexto.translate(canvas.width - 100,canvas.height - 100);
-        contexto.rotate(giro * Math.PI/180);
+        contexto.rotate(this.giro * Math.PI/180);
         contexto.drawImage(portal,-portal.width / 2, -portal.height / 2);
         contexto.restore();
         contexto.closePath();
+        this.giro += 10;
     };
 
     pintarDisparo = (disparos, contexto, bordeArribaHeight, canvas, bordeAbajoHeight, disparoHeight, bordeIzquierdaWidth, bordeDerechaWidth, disparoWidth, imagenDisparo, naveElegida) =>{

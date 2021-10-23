@@ -143,8 +143,6 @@ let vidaRecogible = {x:canvas.width/2 - 35, y: 100};
 var portal = new Image();
 portal.src = './img/portal.png';
 
-var giro = 0;
-
  ////////////////////////////////////////////////////////////////////////////////////
 const resetearNave = () =>{
     contador--;
@@ -319,23 +317,34 @@ const juego = () =>{
     imagenDisparo.src = naveElegida.disparo;
     disparoWidth = naveElegida.disparoTamaño;
     disparoHeight = naveElegida.disparoTamaño;
+
     //PINTAMOS NAVE
     pintar.pintarNave(contexto, haciaArriba, haciaAbajo, haciaIzquierda, haciaDerecha, naveElegida, naveArriba, naveAbajo, naveIzquierda, naveDerecha, naveX, naveY, naveWidth, naveHeight);
+    
     //PINTAMOS BORDES
     pintar.pintarBordes(contexto, bordeIzquierdaWidth, bordeIzquierdaHeight, bordeArribaWidth, bordeArribaHeight, canvas, bordeDerechaWidth, bordeDerechaHeight, bordeAbajoHeight, bordeAbajoWidth);
+    
     //PINTAMOS PRIMER OBSTACULO
     pintar.pintarObstaculos(obstaculoMarginRight, obstaculoMarginTop, obstaculos, contexto, obstaculoUnoWidth, obstaculoUnoHeight, obstaculoUnoX, obstaculoUnoY);
+    
     //PINTAMOS CONTADOR DE VIDAS
     pintar.pintarContador(contexto, contador);
+    
     //PINTAR MUNICION
     pintar.pintarMunicion(contexto, naveElegida, municionNave);
+    
     //PINTAMOS PORTAL
-    pintar.pintarPortal(giro, contexto, canvas, portal);
-    giro = giro + 10;
+    pintar.pintarPortal(contexto, canvas, portal);
+    
     //PINTAMOS DISPARO
     pintar.pintarDisparo(disparos, contexto, bordeArribaHeight, canvas, bordeAbajoHeight, disparoHeight, bordeIzquierdaWidth, bordeDerechaWidth, disparoWidth, imagenDisparo, naveElegida);
+    
     //PINTAMOS ENEMIGOS
     pintar.pintarEnemigos(contexto, enemigos, enemigo);
+    
+    //PINTAMOS VIDA EN EL MAPA
+    pintar.pintarVidaRecogible(contexto, vida, vidaRecogible);
+    
     //GESTIONAMOS MOVIMIENTO DE ENEMIGOS
     for (let i = 0; i < enemigos.length; i++) {
         enemigos[i].x += enemigos[i].MovimientoX;
@@ -357,13 +366,7 @@ const juego = () =>{
         enemigos[1].MovimientoX = -enemigos[1].MovimientoX;
         enemigos[1].x = 1001;
     }
-    //PINTAMOS VIDA EN EL MAPA
-    pintar.pintarVidaRecogible(contexto, vida, vidaRecogible);
-
-
-    //GESTIONAMOS MOVIMIENTO DE LA NAVE
-
-    //MOVIMIENTO HACIA LA IZQUIERDA
+    //GESTIONO MOVIMIENTO DE LA NAVE Y COLISION CON BORDES
     if(izquierdaPulsado){
         haciaArriba = false;
         haciaAbajo = false;
