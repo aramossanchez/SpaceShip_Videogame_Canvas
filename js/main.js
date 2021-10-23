@@ -45,7 +45,8 @@ const cambiarPantalla = (pantalla) =>{
 
 const cerrarMensaje = () => {
     document.getElementById("boton-jugar").style.opacity = 0;
-    document.getElementById("boton-jugar").style.top = "-150%";let casillasSeleccionNave = document.getElementsByClassName("seleccion-nave")
+    document.getElementById("boton-jugar").style.top = "-150%";
+    let casillasSeleccionNave = document.getElementsByClassName("seleccion-nave");
     for (let i = 0; i < casillasSeleccionNave.length; i++) {
         casillasSeleccionNave[i].style.pointerEvents = "initial";
         casillasSeleccionNave[i].style.opacity = 1;
@@ -61,17 +62,8 @@ var naveIzquierda = new Image();
 
 var naveDerecha = new Image();
 
-//CREO VARIABLES PARA LOS BORDES
-
-
-//CREO VARIABLES PARA LOS OBSTACULOS
-var obstaculos = [];
-var obstaculoUnoX = 100;
-var obstaculoUnoY = 40;
-var obstaculoUnoWidth = 10;
-var obstaculoUnoHeight = 300;
-var obstaculoMarginRight = 100;
-var obstaculoMarginTop = 260;
+//VARIABLES DE OBSTACULOS
+let obstaculos = [];
 
 //CREO VARIABLES PARA EL MOVIMIENTO DE LA NAVE
 var velocidadX = 0;
@@ -135,7 +127,7 @@ const resetearNave = () =>{
 //COLISIONES
 const deteccionColisionNave = () => {
     for (let i = 0; i < obstaculos.length; i++) {// RECORRO EL ARRAY DE OBJETOS E INDICO LAS COLISIONES PARA CADA UNO DE LOS OBJETOS GUARDADOS
-        if(naveElegida.naveX + naveElegida.naveHeight > obstaculos[i].x && naveElegida.naveX < obstaculos[i].x + obstaculoUnoWidth && naveElegida.naveY + naveElegida.naveHeight > obstaculos[i].y && naveElegida.naveY < obstaculos[i].y + obstaculoUnoHeight){
+        if(naveElegida.naveX + naveElegida.naveHeight > obstaculos[i].x && naveElegida.naveX < obstaculos[i].x + constantes.obstaculoUnoWidth && naveElegida.naveY + naveElegida.naveHeight > obstaculos[i].y && naveElegida.naveY < obstaculos[i].y + constantes.obstaculoUnoHeight){
             resetearNave();
         };
     }
@@ -144,7 +136,7 @@ const deteccionColisionNave = () => {
 const deteccionColisionDisparos = () => {
     for (let i = 0; i < obstaculos.length; i++) {// RECORRO EL ARRAY DE OBSTACULOS
         for (let a = 0; a < disparos.length; a++) {// RECORRO EL ARRAY DE DISPAROS            
-            if(disparos[a].x + disparos[a].speedX > obstaculos[i].x - disparoWidth && disparos[a].x + disparos[a].speedX < obstaculos[i].x + obstaculoUnoWidth && disparos[a].y + disparos[a].speedY > obstaculos[i].y - disparoHeight && disparos[a].y + disparos[a].speedY < obstaculos[i].y + obstaculoUnoHeight){
+            if(disparos[a].x + disparos[a].speedX > obstaculos[i].x - disparoWidth && disparos[a].x + disparos[a].speedX < obstaculos[i].x + constantes.obstaculoUnoWidth && disparos[a].y + disparos[a].speedY > obstaculos[i].y - disparoHeight && disparos[a].y + disparos[a].speedY < obstaculos[i].y + constantes.obstaculoUnoHeight){
                 disparos[a].x = -100;
                 disparos[a].y = -100;
             };
@@ -295,7 +287,7 @@ const juego = () =>{
     pintar.pintarBordes();
     
     //PINTAMOS PRIMER OBSTACULO
-    pintar.pintarObstaculos(obstaculoMarginRight, obstaculoMarginTop, obstaculos, obstaculoUnoWidth, obstaculoUnoHeight, obstaculoUnoX, obstaculoUnoY);
+    pintar.pintarObstaculos(obstaculos);
     
     //PINTAMOS CONTADOR DE VIDAS
     pintar.pintarContador(contador);

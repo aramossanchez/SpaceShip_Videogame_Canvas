@@ -74,20 +74,20 @@ export default class Pintar{
         constantes.contexto.closePath();
     };
 
-    pintarObstaculos = (obstaculoMarginRight, obstaculoMarginTop, obstaculos, obstaculoUnoWidth, obstaculoUnoHeight, obstaculoUnoX, obstaculoUnoY) =>{
-        obstaculoMarginRight = 100;
+    pintarObstaculos = (obstaculos) =>{
+        constantes.obstaculoMarginRight = 100;
         for (let i = 0; i < 5; i++) {// GUARDO OBJETOS EN UN ARRAY CON LAS POSICIONES QUE TENDRÁN LOS OBSTACULOS
             if (i%2 == 0) {// CREO LA ALTURA VARIABLE DE LOS OBSTACULOS
-                obstaculoMarginTop = 260
+                constantes.obstaculoMarginTop = 260
             }else{
-                obstaculoMarginTop = 0;
+                constantes.obstaculoMarginTop = 0;
             }
-            obstaculos[i] = {x:obstaculoUnoX + obstaculoMarginRight, y: obstaculoUnoY + obstaculoMarginTop};
-            obstaculoMarginRight += 250;
+            obstaculos[i] = {x:constantes.obstaculoUnoX + constantes.obstaculoMarginRight, y: constantes.obstaculoUnoY + constantes.obstaculoMarginTop};
+            constantes.obstaculoMarginRight += 250;
         }
         for (let i = 0; i < obstaculos.length; i++) {// GENERO LOS OBSTACULOS CON LAS POSICIONES GUARDADAS EN EL ARRAY DE OBJETOS
             constantes.contexto.beginPath();
-            constantes.contexto.rect(obstaculos[i].x, obstaculos[i].y, obstaculoUnoWidth, obstaculoUnoHeight);
+            constantes.contexto.rect(obstaculos[i].x, obstaculos[i].y, constantes.obstaculoUnoWidth, constantes.obstaculoUnoHeight);
             constantes.contexto.fillStyle = "#8B0200";
             constantes.contexto.fill();
             constantes.contexto.closePath();

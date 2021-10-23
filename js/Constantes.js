@@ -30,4 +30,16 @@ export default class Constantes {
     
     bordeAbajoHeight = 2.5;
 
+    obstaculoUnoX = 100;
+
+    obstaculoUnoY = 40;
+
+    obstaculoUnoWidth = 10;
+
+    obstaculoUnoHeight = 300;
+
+    obstaculoMarginRight = 100;
+
+    obstaculoMarginTop = 260;
+
 }
