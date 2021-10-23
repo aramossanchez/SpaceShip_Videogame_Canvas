@@ -12,10 +12,6 @@ let constantes = new Constantes();
 import Pintar from "./Pintar.js";
 let pintar = new Pintar();
 
-//IMPORTO CLASE PARA CREAR TODAS LAS VARIABLES DEL JUEGO (NAVE, DISPAROS)
-
-
-
 //MUESTRO TODAS LAS NAVES EN LA PANTALLA DE SELECCIÓN
 for (let i = 0; i < constantes.navesPosibles.length; i++) {
     document.getElementById(`nave${i}`).innerHTML = `<div><span>Name:</span> ${constantes.navesPosibles[i][0]}</div><img src="${constantes.navesPosibles[i][12]}"><div><span>Aceleration:</span> ${constantes.navesPosibles[i][5]*100}</div><div><span>Max Speed:</span> ${constantes.navesPosibles[i][4]*100}</div>`;
@@ -425,7 +421,6 @@ const juego = () =>{
 };
 
 //INVOCAMOS LA FUNCION QUE GESTIONA EL FUNCIONAMIENTO DEL JUEGO
-juego();
 
 //GESTIONO EL COMPORTAMIENTO DE CLICKAR EN EL LISTADO DE NAVES
 document.getElementById("nave0").addEventListener("click", () =>{instanciarNave(0)}, false);
@@ -434,5 +429,5 @@ document.getElementById("nave2").addEventListener("click", () =>{instanciarNave(
 document.getElementById("nave3").addEventListener("click", () =>{instanciarNave(3)}, false);
 
 //GESTIONO EL COMPORTAMIENTO DE LOS BOTONES YES Y NO TRAS ELEGIR NAVE
-document.getElementById("YES").addEventListener("click", () =>{cambiarPantalla(1)}, false);
+document.getElementById("YES").addEventListener("click", () =>{cambiarPantalla(1); juego();}, false);
 document.getElementById("NO").addEventListener("click", cerrarMensaje, false);
