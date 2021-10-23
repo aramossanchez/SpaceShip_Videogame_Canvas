@@ -1,32 +1,7 @@
 // AUTOR: ARMANDO RAMOS SÁNCHEZ
 // VERSION: 1.0
+import Nave from "./nave.js";
 
-//ENTORNO
-
-//CREO LA CLASE NAVE, DONDE CREO EL ESQUEMA DE TODAS LAS CARACTERÍSTICAS QUE TENDRÁ LA NAVE QUE ELIJAMOS
-class Nave {
-
-    constructor(nombre, colorBrillo, velocidadMaxima, aceleracion, naveWidth, naveHeight, disparo, municion, imagenIzquierda, imagenArriba, imagenDerecha, imagenAbajo, disparoTamaño, disparoSonido, disparoVelocidad){
-        this.nombre = nombre,
-        this.colorBrillo = colorBrillo,
-        this.velocidadMaxima = velocidadMaxima,
-        this.aceleracion = aceleracion,
-        this.naveWidth = naveWidth,
-        this.naveHeight = naveHeight,
-        this.disparo = disparo,
-        this.municion = municion,
-        this.imagenIzquierda = imagenIzquierda,
-        this.imagenArriba = imagenArriba,
-        this.imagenDerecha = imagenDerecha,
-        this.imagenAbajo = imagenAbajo,
-        this.disparoTamaño = disparoTamaño,
-        this.disparoSonido = disparoSonido,
-        this.disparoVelocidad = disparoVelocidad
-    }
-
-};
-
-//CREO VARIABLES Y METODO PARA SELECCIONAR LA NAVE CON LA QUE JUGAREMOS
 
 //ARRAY CON TODAS LAS NAVES ELEGIBLES
 let navesPosibles = [
@@ -46,7 +21,7 @@ let naveElegida = new Nave(navesPosibles[0][0], navesPosibles[0][1], navesPosibl
 
 const instanciarNave = (nave) => {
     naveElegida = new Nave(navesPosibles[nave][0], navesPosibles[nave][1], navesPosibles[nave][2], navesPosibles[nave][3], navesPosibles[nave][4], navesPosibles[nave][5], navesPosibles[nave][6], navesPosibles[nave][7], navesPosibles[nave][8], navesPosibles[nave][9], navesPosibles[nave][10], navesPosibles[nave][11], navesPosibles[nave][12], navesPosibles[nave][13], navesPosibles[0][14]);
-    municionNave = navesPosibles[nave][7];
+    municionNave = navesPosibles[nave][7]; //GUARDO LA MUNICION MAXIMA DE LA NAVE EN UNA VARIABLE A PARTE (CLAVE PARA PODER TENER SISTEMA DE RECARGA DE MUNICION)
     document.getElementById("boton-jugar").style.opacity = 1;
     document.getElementById("boton-jugar").style.top = "40%";
     document.getElementById("h2-boton-jugar").innerHTML = `You have selected <span>${naveElegida.nombre}</span>. Are you sure?`
@@ -54,8 +29,8 @@ const instanciarNave = (nave) => {
     for (let i = 0; i < casillasSeleccionNave.length; i++) {
         casillasSeleccionNave[i].style.pointerEvents = "none";
         casillasSeleccionNave[i].style.opacity = 0.5;
-    }
-}
+    };
+};
 
 //VARIABLES Y METODO PARA GESTIÓN DE CAMBIO DE PANTALLAS
 let pantallas = [document.getElementById("pantalla-seleccion"), document.getElementById("game")];
@@ -400,7 +375,7 @@ const pintarMunicion = () => {
     contexto.fillStyle = "#FFBD00";
     contexto.fillText((naveElegida.municion != 0) ? `Municion: ${ naveElegida.municion}/${municionNave}`: "¡RECARGA!", 1100, 50);
     contexto.closePath();
-}
+};
 
 const pintarEnemigos = () => {
     for (let i = 0; i < enemigos.length; i++) {
@@ -420,7 +395,7 @@ const colisionDisparoConEnemigo = () =>{
             if ((disparos[i].y + disparos[i].speedY) <= enemigos[a].y + 50 && disparos[i].y + disparos[i].speedY + disparoHeight >= enemigos[a].y && disparos[i].x + disparos[i].speedX <= enemigos[a].x + 50 && disparos[i].x + disparos[i].speedX + disparoWidth >= enemigos[a].x) {
                 enemigos[a].x = -100;
                 enemigos[a].y = -100;
-                enemigoMovimientoX = 0;
+                enemigos[a].MovimientoX = 0;
                 disparos[i].x = -100;
                 disparos[i].y = -100;
                 disparos[i].speedY = 0;
@@ -447,7 +422,7 @@ const deteccionColisionVida = () => {
         contador++;
         vidaRecogible.x = -100;
         vidaRecogible.y = -100;
-    }
+    };
 };
 
 //CREO EVENTOS PARA PULSACIÓN DE TECLAS Y MOVIMIENTO DE NAVE
@@ -636,5 +611,12 @@ const juego = () =>{
 //INVOCAMOS LA FUNCION QUE GESTIONA EL FUNCIONAMIENTO DEL JUEGO
 juego();
 
+//GESTIONO EL COMPORTAMIENTO DE CLICKAR EN EL LISTADO DE NAVES
+document.getElementById("nave0").addEventListener("click", () =>{instanciarNave(0)}, false);
+document.getElementById("nave1").addEventListener("click", () =>{instanciarNave(1)}, false);
+document.getElementById("nave2").addEventListener("click", () =>{instanciarNave(2)}, false);
+document.getElementById("nave3").addEventListener("click", () =>{instanciarNave(3)}, false);
 
-
+//GESTIONO EL COMPORTAMIENTO DE LOS BOTONES YES Y NO TRAS ELEGIR NAVE
+document.getElementById("YES").addEventListener("click", () =>{cambiarPantalla(1)}, false);
+document.getElementById("NO").addEventListener("click", cerrarMensaje, false);
