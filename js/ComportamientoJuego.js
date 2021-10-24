@@ -3,6 +3,9 @@
 import Constantes from "./Constantes.js";
 let constantes = new Constantes();
 
+import ResetearNave from "./controllers/ResetearNave.js";
+let controllerResetearNave = new ResetearNave();
+
 export default class ComportamientoJuego{
 
     constructor(){
@@ -35,6 +38,17 @@ export default class ComportamientoJuego{
 
         //VARIABLE DE LAS VIDAS DEL JUGADOR
         this.contador = 3;
+    };
+
+    inicializarNave(){
+        this.contador -= 1;
+        this.velocidadX = 0;
+        this.velocidadY = 0;
+        this.haciaDerecha = false;
+        this.haciaIzquierda = false;
+        this.haciaArriba = true;
+        this.haciaAbajo = false;
+        this.disparos = [];
     };
 
     aumentarContador(){
@@ -106,35 +120,11 @@ export default class ComportamientoJuego{
             }
         }
     };
-    
-    //COLISIONES
-    resetearNave = (naveElegida) =>{
-        this.contador--;
-        naveElegida.naveX = 50;
-        naveElegida.naveY = 550;
-        this.velocidadX = 0;
-        this.velocidadY = 0;
-        this.haciaDerecha = false;
-        this.haciaIzquierda = false;
-        this.haciaArriba = true;
-        this.haciaAbajo = false;
-        this.disparos = [];
-        if (this.contador < 0) {
-            window.location.reload();
-        }
-    };
-    deteccionColisionNave = (naveElegida) => {
-        for (let i = 0; i < this.obstaculos.length; i++) {// RECORRO EL ARRAY DE OBJETOS E INDICO LAS COLISIONES PARA CADA UNO DE LOS OBJETOS GUARDADOS
-            if(naveElegida.naveX + naveElegida.naveHeight > this.obstaculos[i].x && naveElegida.naveX < this.obstaculos[i].x + constantes.obstaculoUnoWidth && naveElegida.naveY + naveElegida.naveHeight > this.obstaculos[i].y && naveElegida.naveY < this.obstaculos[i].y + constantes.obstaculoUnoHeight){
-                this.resetearNave(naveElegida);
-            };
-        }
-    };
 
     deteccionColisionEnemigos = (naveElegida) => {
         for (let i = 0; i < this.enemigos.length; i++) {
             if (naveElegida.naveX + naveElegida.naveWidth > this.enemigos[i].x && naveElegida.naveY < this.enemigos[i].y + 50 && naveElegida.naveX < this.enemigos[i].x + 50 && naveElegida.naveY + naveElegida.naveHeight > this.enemigos[i].y) {
-                this.resetearNave(naveElegida);
+                controllerResetearNave.resetearNave(naveElegida, this.contador, this.inicializarNave());
             };
         }
     };

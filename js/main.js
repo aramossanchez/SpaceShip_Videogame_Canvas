@@ -50,6 +50,12 @@ let controllerColisionDisparoEnemigo = new ColisionDisparoEnemigo();
 import ColisionDisparoObstaculo from "./controllers/ColisionDisparoObstaculo.js";
 let controllerColisionDisparoObstaculo = new ColisionDisparoObstaculo();
 
+import ColisionNaveObstaculos from "./controllers/ColisionNaveObstaculos.js";
+let controllerColisionNaveObstaculos = new ColisionNaveObstaculos();
+
+import ResetearNave from "./controllers/ResetearNave.js";
+let controllerResetearNave = new ResetearNave();
+
 //MUESTRO TODAS LAS NAVES EN LA PANTALLA DE SELECCIÓN
 for (let i = 0; i < constantes.navesPosibles.length; i++) {
     document.getElementById(`nave${i}`).innerHTML = `<div><span>Name:</span> ${constantes.navesPosibles[i][0]}</div><img src="${constantes.navesPosibles[i][12]}"><div><span>Aceleration:</span> ${constantes.navesPosibles[i][5]*100}</div><div><span>Max Speed:</span> ${constantes.navesPosibles[i][4]*100}</div>`;
@@ -220,7 +226,7 @@ const juego = () =>{
         naveElegida.naveX += comportamientoJuego.velocidadX;
     };
     if(naveElegida.naveX <= 0 + constantes.bordeIzquierdaWidth){
-        comportamientoJuego.resetearNave(naveElegida);
+        controllerResetearNave.resetearNave(naveElegida);
     }
     //MOVIMIENTO HACIA ARRIBA
     if(arribaPulsado){
@@ -237,7 +243,7 @@ const juego = () =>{
         naveElegida.naveY += comportamientoJuego.velocidadY;
     };
     if(naveElegida.naveY <= 0 + constantes.bordeArribaHeight){
-        comportamientoJuego.resetearNave(naveElegida);
+        controllerResetearNave.resetearNave(naveElegida);
     }
     //MOVIMIENTO HACIA DERECHA
     if(derechaPulsado){
@@ -254,7 +260,7 @@ const juego = () =>{
         naveElegida.naveX += comportamientoJuego.velocidadX;
     };
     if(naveElegida.naveX >= constantes.canvas.width - naveElegida.naveHeight - constantes.bordeDerechaWidth){
-        comportamientoJuego.resetearNave(naveElegida);
+        controllerResetearNave.resetearNave(naveElegida);
     }
     //MOVIMIENTO HACIA ABAJO
     if(abajoPulsado){
@@ -271,11 +277,11 @@ const juego = () =>{
         naveElegida.naveY += comportamientoJuego.velocidadY;
     };
     if(naveElegida.naveY >= constantes.canvas.height - naveElegida.naveHeight - constantes.bordeAbajoHeight){
-        comportamientoJuego.resetearNave(naveElegida);
+        controllerResetearNave.resetearNave(naveElegida);
     };
 
     //COLISIONES
-    comportamientoJuego.deteccionColisionNave(naveElegida);
+    controllerColisionNaveObstaculos.deteccionColisionNave(naveElegida, comportamientoJuego.contador, comportamientoJuego.obstaculos, comportamientoJuego);
     controllerColisionDisparoObstaculo.deteccionColisionDisparos(naveElegida, comportamientoJuego.obstaculos, comportamientoJuego.disparos, comportamientoJuego);
     comportamientoJuego.deteccionColisionEnemigos(naveElegida);
     controllerColisionDisparoEnemigo.colisionDisparoConEnemigo(naveElegida, comportamientoJuego.disparos, comportamientoJuego.enemigos, comportamientoJuego);
