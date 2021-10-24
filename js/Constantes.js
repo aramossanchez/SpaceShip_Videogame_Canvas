@@ -30,6 +30,7 @@ export default class Constantes {
     
     bordeAbajoHeight = 2.5;
 
+    //VALORES DE LOS OBSTACULOS PINTADOS EN PANTALLA
     obstaculoUnoX = 100;
 
     obstaculoUnoY = 40;

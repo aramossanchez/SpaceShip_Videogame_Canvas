@@ -8,11 +8,35 @@ import Nave from "./Nave.js";
 import Constantes from "./Constantes.js";
 let constantes = new Constantes();
 
-//IMPORTO FUNCIONES PARA DIBUJAR OBJETOS EN LIENZO
+//IMPORTO FUNCIONES PARA DIBUJAR OBJETOS EN LIENZO Y COMPORTAMIENTO DE OBJETOS
 import ComportamientoJuego from "./ComportamientoJuego.js";
 let comportamientoJuego = new ComportamientoJuego();
 
-//IMPORTO LA CLASE JUEGO
+//IMPORTO DRAWERS
+import PintarBordes from "./drawers/PintarBordes.js";
+let drawerBordes = new PintarBordes();
+
+import PintarContador from "./drawers/PintarContador.js";
+let drawerContador = new PintarContador();
+
+import PintarMunicion from "./drawers/PintarMunicion.js";
+let drawerMunicion = new PintarMunicion();
+
+import PintarPortal from "./drawers/PintarPortal.js";
+let drawerPortal = new PintarPortal();
+
+import PintarVidaRecogible from "./drawers/PintarVidaRecogible.js";
+let drawerVidaRecogible = new PintarVidaRecogible();
+
+//IMPORTO CONTROLLERS
+import RecargarMunicion from "./controllers/RecargarMunicion.js";
+let controllerRecargarMunicion = new RecargarMunicion();
+
+import GanarJuego from "./controllers/GanarJuego.js";
+let controllerGanarJuego = new GanarJuego();
+
+import ColisionNaveVida from "./controllers/ColisionNaveVida.js";
+let controllerColisionNaveVida = new ColisionNaveVida;
 
 //MUESTRO TODAS LAS NAVES EN LA PANTALLA DE SELECCIÓN
 for (let i = 0; i < constantes.navesPosibles.length; i++) {
@@ -24,7 +48,7 @@ let naveElegida = new Nave(constantes.navesPosibles[0][0], constantes.navesPosib
 
 const instanciarNave = (nave) => {
     naveElegida = new Nave(constantes.navesPosibles[nave][0], constantes.navesPosibles[nave][1], constantes.navesPosibles[nave][2], constantes.navesPosibles[nave][3], constantes.navesPosibles[nave][4], constantes.navesPosibles[nave][5], constantes.navesPosibles[nave][6], constantes.navesPosibles[nave][7], constantes.navesPosibles[nave][8], constantes.navesPosibles[nave][9], constantes.navesPosibles[nave][10], constantes.navesPosibles[nave][11], constantes.navesPosibles[nave][12], constantes.navesPosibles[nave][13], constantes.navesPosibles[nave][14], constantes.navesPosibles[nave][15], constantes.navesPosibles[nave][16]);
-    municionNave = constantes.navesPosibles[nave][9]; //GUARDO LA MUNICION MAXIMA DE LA NAVE EN UNA VARIABLE A PARTE (CLAVE PARA PODER TENER SISTEMA DE RECARGA DE MUNICION)
+    controllerRecargarMunicion.municionNave = constantes.navesPosibles[nave][9]; //GUARDO LA MUNICION MAXIMA DE LA NAVE EN UNA VARIABLE A PARTE (CLAVE PARA PODER TENER SISTEMA DE RECARGA DE MUNICION)
     document.getElementById("boton-jugar").style.opacity = 1;
     document.getElementById("boton-jugar").style.top = "40%";
     document.getElementById("h2-boton-jugar").innerHTML = `You have selected <span>${naveElegida.nombre}</span>. Are you sure?`
@@ -69,117 +93,6 @@ var derechaPulsado = false;
 var arribaPulsado = false;
 var abajoPulsado = false;
 
-var haciaDerecha = false;
-var haciaIzquierda = false;
-var haciaArriba = true;
-var haciaAbajo = false;
-
-//VARIABLES PARA LOS DISPAROS
-
-var disparoWidth = 0;
-var disparoHeight = 0;
-
-var sonidoDisparo = new Audio();
-
-var imagenDisparo = new Image();
-
-var municionNave = 5;// SE GUARDARÁ LA MUNICIÓN MAXIMA DEL DISPARO DE LA NAVE SELECCIONADA
-
-//CREO VARIABLE PARA LLEVAR UN CONTEO DE LAS VIDAS
-var contador = 3;
-
-//CREO VARIABLE DE ENEMIGO
-let enemigos = [
-    {x: 30, y: 100, MovimientoX: 3, MovimientoY: 0},
-    {x: 1001, y: 100, MovimientoX: 2, MovimientoY: 0}
-];
-
-//CREO VARIABLE DE VIDA RECOGIBLE
-var vida = new Image();
-vida.src = './img/vida.png';
-
-let vidaRecogible = {x:constantes.canvas.width/2 - 35, y: 100};
-
- ////////////////////////////////////////////////////////////////////////////////////
-const resetearNave = () =>{
-    contador--;
-    naveElegida.naveX = 50;
-    naveElegida.naveY = 550;
-    comportamientoJuego.velocidadX = 0;
-    comportamientoJuego.velocidadY = 0;
-    haciaDerecha = false;
-    haciaIzquierda = false;
-    haciaArriba = true;
-    haciaAbajo = false;
-    comportamientoJuego.disparos = [];
-    if (contador < 0) {
-        window.location.reload();
-    }
-};
-
-
-
-const deteccionColisionEnemigos = () => {
-    for (let i = 0; i < enemigos.length; i++) {
-        if (naveElegida.naveX + naveElegida.naveWidth > enemigos[i].x && naveElegida.naveY < enemigos[i].y + 50 && naveElegida.naveX < enemigos[i].x + 50 && naveElegida.naveY + naveElegida.naveHeight > enemigos[i].y) {
-            resetearNave();
-        };
-    }
-};
-
-const ganarJuego = () =>{
-    if (naveElegida.naveX + naveElegida.naveHeight > constantes.canvas.width - 100 && naveElegida.naveX < constantes.canvas.width - 100 + 1 && naveElegida.naveY + naveElegida.naveHeight > constantes.canvas.height - 100 && naveElegida.naveY < constantes.canvas.height - 100 + 1){
-        alert("WIN");
-    }
-}
-
-const disparar = () =>{ //CON CADA PULSACIÓN DE ESPACIO, GUARDO UN OBJETO DISPARO EN EL ARRAY. ESTO HACE QUE CADA DISPARO PUEDA FUNCIONAR DE MANERA INDEPENDIENTE
-    if(naveElegida.municion != 0){
-        sonidoDisparo.src = naveElegida.disparoSonido;
-        sonidoDisparo.currentTime = 0.25;
-        let disparo = {
-            x: naveElegida.naveX + naveElegida.naveWidth/2 - disparoWidth/2,
-            y: naveElegida.naveY+ naveElegida.naveHeight/2 - disparoHeight/2,//HACE QUE LOS DISPAROS SALGAN DESDE EL CENTRO DE LA NAVE
-            speedX: 0,
-            speedY: 0,
-            direccion: ""
-        }
-        if (haciaIzquierda) {
-            disparo.direccion = "izquierda";
-            comportamientoJuego.velocidadX+=0.25;
-        }
-        if (haciaArriba) {
-            disparo.direccion = "arriba";
-            comportamientoJuego.velocidadY+=0.25;
-        }
-        if (haciaDerecha) {
-            disparo.direccion = "derecha";
-            comportamientoJuego.velocidadX-=0.25;
-        }
-        if (haciaAbajo) {
-            disparo.direccion = "abajo";
-            comportamientoJuego.velocidadY-=0.25;
-        }
-        comportamientoJuego.disparos.push(disparo);
-        naveElegida.municion--;
-        sonidoDisparo.play();
-    };
-};
-
-const recargar = () =>{
-    if (naveElegida.municion == 0) {
-        naveElegida.municion = municionNave;
-    }
-};
-
-const deteccionColisionVida = () => {
-    if (naveElegida.naveX + naveElegida.naveWidth > vidaRecogible.x && naveElegida.naveY < vidaRecogible.y + 30 && naveElegida.naveX < vidaRecogible.x + 30 && naveElegida.naveY + naveElegida.naveHeight > vidaRecogible.y) {
-        contador++;
-        vidaRecogible.x = -100;
-        vidaRecogible.y = -100;
-    };
-};
-
 //CREO EVENTOS PARA PULSACIÓN DE TECLAS Y MOVIMIENTO DE NAVE
 const pulsarTecla = (e) =>{
     if(e.keyCode == 37) {
@@ -210,10 +123,10 @@ const levantarTecla = (e) =>{
         abajoPulsado = false;
     }
     if(e.keyCode == 32) {// SOLTAR EL ESPACIO PROVOCA DISPARO
-        disparar();
+        comportamientoJuego.disparar(naveElegida);
     }
     if(e.keyCode == 17) {// SOLTAR LA TECLA CTRLIZQ PROVOCAR RECARGAR ARMA
-        recargar();
+        controllerRecargarMunicion.recargar(naveElegida);
     }
 
 }
@@ -227,70 +140,65 @@ const juego = () =>{
     constantes.contexto.clearRect(0, 0, constantes.canvas.width, constantes.canvas.height);  
 
     // ASIGNAMOS VALORES A LAS VARIABLES QUE DEPENDEN DE QUÉ NAVE HAYAMOS ELEGIDO
-    let naveWidth = naveElegida.naveWidth;
-    let naveHeight = naveElegida.naveHeight;
     naveArriba.src = naveElegida.imagenArriba;
     naveAbajo.src = naveElegida.imagenAbajo;
     naveIzquierda.src = naveElegida.imagenIzquierda;
     naveDerecha.src = naveElegida.imagenDerecha;
-    imagenDisparo.src = naveElegida.disparo;
-    disparoWidth = naveElegida.disparoTamaño;
-    disparoHeight = naveElegida.disparoTamaño;
 
     //PINTAMOS NAVE
-    comportamientoJuego.pintarNave(haciaArriba, haciaAbajo, haciaIzquierda, haciaDerecha, naveElegida, naveArriba, naveAbajo, naveIzquierda, naveDerecha, naveElegida.naveX, naveElegida.naveY, naveWidth, naveHeight);
+    comportamientoJuego.pintarNave(naveElegida, naveArriba, naveAbajo, naveIzquierda, naveDerecha);
     
     //PINTAMOS BORDES
-    comportamientoJuego.pintarBordes();
+    drawerBordes.pintarBordes();
     
     //PINTAMOS PRIMER OBSTACULO
     comportamientoJuego.pintarObstaculos();
     
     //PINTAMOS CONTADOR DE VIDAS
-    comportamientoJuego.pintarContador(contador);
+    drawerContador.pintarContador(comportamientoJuego.contador);
     
     //PINTAR MUNICION
-    comportamientoJuego.pintarMunicion(naveElegida, municionNave);
+    drawerMunicion.pintarMunicion(naveElegida, controllerRecargarMunicion.municionNave);
     
     //PINTAMOS PORTAL
-    comportamientoJuego.pintarPortal();
+    drawerPortal.pintarPortal();
     
     //PINTAMOS DISPARO
-    comportamientoJuego.pintarDisparo(disparoHeight, disparoWidth, imagenDisparo, naveElegida);
+    comportamientoJuego.pintarDisparo(naveElegida);
     
     //PINTAMOS ENEMIGOS
-    comportamientoJuego.pintarEnemigos(enemigos);
+    comportamientoJuego.pintarEnemigos();
     
     //PINTAMOS VIDA EN EL MAPA
-    comportamientoJuego.pintarVidaRecogible(vida, vidaRecogible);
+    drawerVidaRecogible.pintarVidaRecogible();
     
     //GESTIONAMOS MOVIMIENTO DE ENEMIGOS
-    for (let i = 0; i < enemigos.length; i++) {
-        enemigos[i].x += enemigos[i].MovimientoX;
+    for (let i = 0; i <  comportamientoJuego.enemigos.length; i++) {
+         comportamientoJuego.enemigos[i].x +=  comportamientoJuego.enemigos[i].MovimientoX;
     }
     // ES NECESARIO GESTIONAR CADA ENEMIGO POR SEPARADO, NO SE REALIZA CORRECTAMENTE RECORRIENDO EL ARRAY CON FOR
-    if (enemigos[0].x >= 380) {
-        enemigos[0].MovimientoX = -enemigos[0].MovimientoX;
-        enemigos[0].x = 379;
+    if ( comportamientoJuego.enemigos[0].x >= 380) {
+         comportamientoJuego.enemigos[0].MovimientoX = - comportamientoJuego.enemigos[0].MovimientoX;
+         comportamientoJuego.enemigos[0].x = 379;
     }
-    if (enemigos[0].x <= 40) {
-        enemigos[0].MovimientoX = -enemigos[0].MovimientoX;
-        enemigos[0].x = 41;
+    if ( comportamientoJuego.enemigos[0].x <= 40) {
+         comportamientoJuego.enemigos[0].MovimientoX = - comportamientoJuego.enemigos[0].MovimientoX;
+         comportamientoJuego.enemigos[0].x = 41;
     }
-    if (enemigos[1].x >= 1350) {
-        enemigos[1].MovimientoX = -enemigos[1].MovimientoX;
-        enemigos[1].x = 1349;
+    if ( comportamientoJuego.enemigos[1].x >= 1350) {
+         comportamientoJuego.enemigos[1].MovimientoX = - comportamientoJuego.enemigos[1].MovimientoX;
+         comportamientoJuego.enemigos[1].x = 1349;
     }
-    if (enemigos[1].x <= 1000) {
-        enemigos[1].MovimientoX = -enemigos[1].MovimientoX;
-        enemigos[1].x = 1001;
+    if ( comportamientoJuego.enemigos[1].x <= 1000) {
+         comportamientoJuego.enemigos[1].MovimientoX = - comportamientoJuego.enemigos[1].MovimientoX;
+         comportamientoJuego.enemigos[1].x = 1001;
     }
     //GESTIONO MOVIMIENTO DE LA NAVE Y COLISION CON BORDES
     if(izquierdaPulsado){
-        haciaArriba = false;
-        haciaAbajo = false;
-        haciaIzquierda = true;
-        haciaDerecha = false;
+        comportamientoJuego.haciaArriba = false;
+        comportamientoJuego.haciaAbajo = false;
+        comportamientoJuego.haciaIzquierda = true;
+        comportamientoJuego.haciaDerecha = false;
         if (comportamientoJuego.velocidadX > -naveElegida.velocidadMaxima){
             comportamientoJuego.velocidadX -= naveElegida.aceleracion;
         };
@@ -300,14 +208,14 @@ const juego = () =>{
         naveElegida.naveX += comportamientoJuego.velocidadX;
     };
     if(naveElegida.naveX <= 0 + constantes.bordeIzquierdaWidth){
-        resetearNave();
+        comportamientoJuego.resetearNave(naveElegida);
     }
     //MOVIMIENTO HACIA ARRIBA
     if(arribaPulsado){
-        haciaArriba = true;
-        haciaAbajo = false;
-        haciaIzquierda = false;
-        haciaDerecha = false;
+        comportamientoJuego.haciaArriba = true;
+        comportamientoJuego.haciaAbajo = false;
+        comportamientoJuego.haciaIzquierda = false;
+        comportamientoJuego.haciaDerecha = false;
         if (comportamientoJuego.velocidadY > -naveElegida.velocidadMaxima){
             comportamientoJuego.velocidadY -= naveElegida.aceleracion;
         };
@@ -317,14 +225,14 @@ const juego = () =>{
         naveElegida.naveY += comportamientoJuego.velocidadY;
     };
     if(naveElegida.naveY <= 0 + constantes.bordeArribaHeight){
-        resetearNave();
+        comportamientoJuego.resetearNave(naveElegida);
     }
     //MOVIMIENTO HACIA DERECHA
     if(derechaPulsado){
-        haciaArriba = false;
-        haciaAbajo = false;
-        haciaIzquierda = false;
-        haciaDerecha = true;
+        comportamientoJuego.haciaArriba = false;
+        comportamientoJuego.haciaAbajo = false;
+        comportamientoJuego.haciaIzquierda = false;
+        comportamientoJuego.haciaDerecha = true;
         if (comportamientoJuego.velocidadX < naveElegida.velocidadMaxima){
             comportamientoJuego.velocidadX += naveElegida.aceleracion;
         }
@@ -333,15 +241,15 @@ const juego = () =>{
     if(!derechaPulsado){
         naveElegida.naveX += comportamientoJuego.velocidadX;
     };
-    if(naveElegida.naveX >= constantes.canvas.width - naveHeight - constantes.bordeDerechaWidth){
-        resetearNave();
+    if(naveElegida.naveX >= constantes.canvas.width - naveElegida.naveHeight - constantes.bordeDerechaWidth){
+        comportamientoJuego.resetearNave(naveElegida);
     }
     //MOVIMIENTO HACIA ABAJO
     if(abajoPulsado){
-        haciaArriba = false;
-        haciaAbajo = true;
-        haciaIzquierda = false;
-        haciaDerecha = false;
+        comportamientoJuego.haciaArriba = false;
+        comportamientoJuego.haciaAbajo = true;
+        comportamientoJuego.haciaIzquierda = false;
+        comportamientoJuego.haciaDerecha = false;
         if (comportamientoJuego.velocidadY < naveElegida.velocidadMaxima){
             comportamientoJuego.velocidadY += naveElegida.aceleracion;
         };
@@ -350,19 +258,20 @@ const juego = () =>{
     if(!abajoPulsado){
         naveElegida.naveY += comportamientoJuego.velocidadY;
     };
-    if(naveElegida.naveY >= constantes.canvas.height - naveHeight - constantes.bordeAbajoHeight){
-        resetearNave();
+    if(naveElegida.naveY >= constantes.canvas.height - naveElegida.naveHeight - constantes.bordeAbajoHeight){
+        comportamientoJuego.resetearNave(naveElegida);
     };
 
     //COLISIONES
     comportamientoJuego.deteccionColisionNave(naveElegida);
-    comportamientoJuego.deteccionColisionDisparos(disparoWidth, disparoHeight);
-    deteccionColisionEnemigos(enemigos);
-    comportamientoJuego.colisionDisparoConEnemigo(disparoHeight, disparoWidth, enemigos);
-    deteccionColisionVida();
+    comportamientoJuego.deteccionColisionDisparos(naveElegida);
+    comportamientoJuego.deteccionColisionEnemigos(naveElegida);
+    comportamientoJuego.colisionDisparoConEnemigo(naveElegida);
+    controllerColisionNaveVida.deteccionColisionVida(naveElegida, comportamientoJuego, drawerVidaRecogible.vidaRecogible);
+    console.log(comportamientoJuego.contador);
 
     //GANAMOS JUEGO
-    ganarJuego();
+    controllerGanarJuego.ganarJuego(naveElegida);
 
     //CUANDO LLAMEMOS A LA FUNCIÓN, SE EJECUTARÁ EN BUCLE CON LA TASA DE REFRESCOS MÁXIMA QUE SOPORTE EL NAVEGADOR
     requestAnimationFrame(juego);

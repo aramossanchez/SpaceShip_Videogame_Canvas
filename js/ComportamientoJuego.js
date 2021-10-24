@@ -9,85 +9,74 @@ export default class ComportamientoJuego{
         //VARIABLES DEL MOVIMIENTO DE LA NAVE
         this.velocidadX = 0;
         this.velocidadY = 0;
-
-        //VARIABLES DEL PORTAL
-        this.giro = 0;
-        this.portal = new Image();
-        this.portal.src = './img/portal.png';
+        this.haciaIzquierda = false;
+        this.haciaArriba = true;
+        this.haciaDerecha = false;
+        this.haciaAbajo = false;
 
         //VARIABLES DE LOS ENEMIGOS
         this.enemigo = new Image();
         this.enemigo.src = './img/enemigo.png';
+        this.enemigos = [
+            {x: 30, y: 100, MovimientoX: 3, MovimientoY: 0},
+            {x: 1001, y: 100, MovimientoX: 2, MovimientoY: 0}
+        ];
         
         //VARIABLES DE LOS OBSTACULOS
         this.obstaculos = [];
 
         //VARIABLES DE LOS DISPAROS
         this.disparos = [];
+        this.sonidoDisparo = new Audio();
+        this.imagenDisparo = new Image();
+        this.disparoWidth = 0;
+        this.disparoHeight = 0;
+        this.municionNave = 0;
+
+        //VARIABLE DE LAS VIDAS DEL JUGADOR
+        this.contador = 3;
+    };
+
+    aumentarContador(){
+        this.contador += 1;
     }
 
     //PINTAR EN EL LIENZO
-    pintarNave = (haciaArriba, haciaAbajo, haciaIzquierda, haciaDerecha, naveElegida, naveArriba, naveAbajo, naveIzquierda, naveDerecha, naveX, naveY, naveWidth, naveHeight) =>{    
+    pintarNave = (naveElegida, naveArriba, naveAbajo, naveIzquierda, naveDerecha) =>{    
         constantes.contexto.save()
         //BRILLO DE LA NAVE
         constantes.contexto.shadowBlur=35;
-        if (haciaArriba) {
+        if (this.haciaArriba) {
             constantes.contexto.shadowOffsetY=20;
         }
-        if (haciaAbajo) {
+        if (this.haciaAbajo) {
             constantes.contexto.shadowOffsetY=-20;
         }
-        if (haciaIzquierda) {
+        if (this.haciaIzquierda) {
             constantes.contexto.shadowOffsetX=20;
         }
-        if (haciaDerecha) {
+        if (this.haciaDerecha) {
             constantes.contexto.shadowOffsetX=-20;
         }
         constantes.contexto.shadowColor=naveElegida.colorBrillo;
         constantes.contexto.beginPath();
         //CAMBIA LA ORIENTACION DE LA NAVE
-        if (haciaArriba) {
-            constantes.contexto.drawImage(naveArriba, naveX, naveY, naveWidth, naveHeight);
+        if (this.haciaArriba) {
+            constantes.contexto.drawImage(naveArriba, naveElegida.naveX, naveElegida.naveY, naveElegida.naveWidth, naveElegida.naveHeight);
         }
-        if (haciaAbajo) {
-            constantes.contexto.drawImage(naveAbajo, naveX, naveY, naveWidth, naveHeight);
+        if (this.haciaAbajo) {
+            constantes.contexto.drawImage(naveAbajo, naveElegida.naveX, naveElegida.naveY, naveElegida.naveWidth, naveElegida.naveHeight);
         }
-        if (haciaIzquierda) {
-            constantes.contexto.drawImage(naveIzquierda, naveX, naveY, naveHeight, naveWidth);
+        if (this.haciaIzquierda) {
+            constantes.contexto.drawImage(naveIzquierda, naveElegida.naveX, naveElegida.naveY, naveElegida.naveHeight, naveElegida.naveWidth);
         }
-        if (haciaDerecha) {
-            constantes.contexto.drawImage(naveDerecha, naveX, naveY, naveHeight, naveWidth);
+        if (this.haciaDerecha) {
+            constantes.contexto.drawImage(naveDerecha, naveElegida.naveX, naveElegida.naveY, naveElegida.naveHeight, naveElegida.naveWidth);
         }
         constantes.contexto.fillStyle = "#AAAAAA";
         constantes.contexto.fill();
         constantes.contexto.closePath();
         constantes.contexto.restore();
-    };
-
-    pintarBordes = () => {
-        constantes.contexto.beginPath();
-        constantes.contexto.rect(0, 0, constantes.bordeIzquierdaWidth, constantes.bordeIzquierdaHeight);
-        constantes.contexto.fillStyle = "#FFFFFF";
-        constantes.contexto.fill();
-        constantes.contexto.closePath();
-    
-        constantes.contexto.beginPath();
-        constantes.contexto.rect(0, 0, constantes.bordeArribaWidth, constantes.bordeArribaHeight);
-        constantes.contexto.fillStyle = "#FFFFFF";
-        constantes.contexto.fill();
-        constantes.contexto.closePath();
-    
-        constantes.contexto.beginPath();
-        constantes.contexto.rect(constantes.canvas.width - constantes.bordeDerechaWidth, 0, constantes.bordeDerechaWidth, constantes.bordeDerechaHeight);
-        constantes.contexto.fillStyle = "#FFFFFF";
-        constantes.contexto.fill();
-        constantes.contexto.closePath();
-    
-        constantes.contexto.beginPath();
-        constantes.contexto.rect(0, constantes.canvas.height - constantes.bordeAbajoHeight, constantes.bordeAbajoWidth, constantes.bordeAbajoHeight);
-        constantes.contexto.fillStyle = "#FFFFFF";
-        constantes.contexto.fill();
-        constantes.contexto.closePath();
     };
 
     pintarObstaculos = () =>{
@@ -110,43 +99,16 @@ export default class ComportamientoJuego{
         }
     };
 
-    pintarContador = (contador) =>{
-        constantes.contexto.beginPath();
-        constantes.contexto.font = "30px Arial";
-        constantes.contexto.fillStyle = "#FFBD00";
-        constantes.contexto.fillText("Ships: " + contador, 30, 50);
-        constantes.contexto.closePath();
-    };
-
-    pintarMunicion = (naveElegida, municionNave) => {
-        constantes.contexto.beginPath();
-        constantes.contexto.font = "30px Arial";
-        constantes.contexto.fillStyle = "#FFBD00";
-        constantes.contexto.fillText((naveElegida.municion != 0) ? `Municion: ${ naveElegida.municion}/${municionNave}`: "¡RECARGA!", 1100, 50);
-        constantes.contexto.closePath();
-    };
-
-    pintarPortal = () =>{
-        constantes.contexto.save();
-        constantes.contexto.beginPath();
-        constantes.contexto.shadowBlur = 55;
-        constantes.contexto.shadowColor = "#0000FF";
-        constantes.contexto.translate(constantes.canvas.width - 100,constantes.canvas.height - 100);
-        constantes.contexto.rotate(this.giro * Math.PI/180);
-        constantes.contexto.drawImage(this.portal,-this.portal.width / 2, -this.portal.height / 2);
-        constantes.contexto.restore();
-        constantes.contexto.closePath();
-        this.giro += 10;
-    };
-
-    pintarDisparo = (disparoHeight, disparoWidth, imagenDisparo, naveElegida) =>{
+    pintarDisparo = (naveElegida) =>{
+        
+        this.imagenDisparo.src = naveElegida.disparo;
         // RECORRO EL ARRAY DE DISPAROS CUANDO NO ESTÁ VACIO Y PINTO TODOS LOS this.DISPAROS LANZADOS
         if (this.disparos.length != 0) {
             for (let i = 0; i < this.disparos.length; i++) {
                 // CONTROLO LA COLISIÓN CON LOS BORDES
-                if ((this.disparos[i].y + this.disparos[i].speedY) >= (0 + constantes.bordeArribaHeight) && (this.disparos[i].y + this.disparos[i].speedY) <= (constantes.canvas.height - constantes.bordeAbajoHeight- disparoHeight) && this.disparos[i].x + this.disparos[i].speedX > 0 + constantes.bordeIzquierdaWidth && this.disparos[i].x + this.disparos[i].speedX < constantes.canvas.width - constantes.bordeDerechaWidth - disparoWidth) {
+                if ((this.disparos[i].y + this.disparos[i].speedY) >= (0 + constantes.bordeArribaHeight) && (this.disparos[i].y + this.disparos[i].speedY) <= (constantes.canvas.height - constantes.bordeAbajoHeight- naveElegida.disparoTamaño) && this.disparos[i].x + this.disparos[i].speedX > 0 + constantes.bordeIzquierdaWidth && this.disparos[i].x + this.disparos[i].speedX < constantes.canvas.width - constantes.bordeDerechaWidth - naveElegida.disparoTamaño) {
                     constantes.contexto.beginPath();
-                    constantes.contexto.drawImage(imagenDisparo, this.disparos[i].x + this.disparos[i].speedX, this.disparos[i].y + this.disparos[i].speedY, disparoWidth, disparoHeight);
+                    constantes.contexto.drawImage(this.imagenDisparo, this.disparos[i].x + this.disparos[i].speedX, this.disparos[i].y + this.disparos[i].speedY, naveElegida.disparoTamaño, naveElegida.disparoTamaño);
                     constantes.contexto.fill();    
                     constantes.contexto.closePath();
                     switch (this.disparos[i].direccion) {
@@ -170,39 +132,51 @@ export default class ComportamientoJuego{
         }
     };
 
-    pintarEnemigos = (enemigos) => {
-        for (let i = 0; i < enemigos.length; i++) {
+    pintarEnemigos = () => {
+        for (let i = 0; i < this.enemigos.length; i++) {
             constantes.contexto.beginPath();
-            constantes.contexto.drawImage(this.enemigo, enemigos[i].x, enemigos[i].y, 50, 50);
+            constantes.contexto.drawImage(this.enemigo, this.enemigos[i].x, this.enemigos[i].y, 50, 50);
             constantes.contexto.fill();    
             constantes.contexto.closePath();        
         }
     };
     
-    pintarVidaRecogible = (vida, vidaRecogible) =>{
-        constantes.contexto.beginPath();
-        constantes.contexto.save();
-        constantes.contexto.shadowBlur = 25;
-        constantes.contexto.shadowColor = "#FFFF00";
-        constantes.contexto.drawImage(vida, vidaRecogible.x, vidaRecogible.y, 30, 30);
-        constantes.contexto.fill();
-        constantes.contexto.closePath();
-        constantes.contexto.restore();
-    };
-    
     //COLISIONES
+    resetearNave = (naveElegida) =>{
+        this.contador--;
+        naveElegida.naveX = 50;
+        naveElegida.naveY = 550;
+        this.velocidadX = 0;
+        this.velocidadY = 0;
+        this.haciaDerecha = false;
+        this.haciaIzquierda = false;
+        this.haciaArriba = true;
+        this.haciaAbajo = false;
+        this.disparos = [];
+        if (this.contador < 0) {
+            window.location.reload();
+        }
+    };
     deteccionColisionNave = (naveElegida) => {
         for (let i = 0; i < this.obstaculos.length; i++) {// RECORRO EL ARRAY DE OBJETOS E INDICO LAS COLISIONES PARA CADA UNO DE LOS OBJETOS GUARDADOS
             if(naveElegida.naveX + naveElegida.naveHeight > this.obstaculos[i].x && naveElegida.naveX < this.obstaculos[i].x + constantes.obstaculoUnoWidth && naveElegida.naveY + naveElegida.naveHeight > this.obstaculos[i].y && naveElegida.naveY < this.obstaculos[i].y + constantes.obstaculoUnoHeight){
-                resetearNave();
+                this.resetearNave(naveElegida);
             };
         }
-    }
+    };
 
-    deteccionColisionDisparos = (disparoWidth, disparoHeight) => {
+    deteccionColisionEnemigos = (naveElegida) => {
+        for (let i = 0; i < this.enemigos.length; i++) {
+            if (naveElegida.naveX + naveElegida.naveWidth > this.enemigos[i].x && naveElegida.naveY < this.enemigos[i].y + 50 && naveElegida.naveX < this.enemigos[i].x + 50 && naveElegida.naveY + naveElegida.naveHeight > this.enemigos[i].y) {
+                this.resetearNave(naveElegida);
+            };
+        }
+    };
+
+    deteccionColisionDisparos = (naveElegida) => {
         for (let i = 0; i < this.obstaculos.length; i++) {// RECORRO EL ARRAY DE OBSTACULOS
             for (let a = 0; a < this.disparos.length; a++) {// RECORRO EL ARRAY DE DISPAROS            
-                if(this.disparos[a].x + this.disparos[a].speedX > this.obstaculos[i].x - disparoWidth && this.disparos[a].x + this.disparos[a].speedX < this.obstaculos[i].x + constantes.obstaculoUnoWidth && this.disparos[a].y + this.disparos[a].speedY > this.obstaculos[i].y - disparoHeight && this.disparos[a].y + this.disparos[a].speedY < this.obstaculos[i].y + constantes.obstaculoUnoHeight){
+                if(this.disparos[a].x + this.disparos[a].speedX > this.obstaculos[i].x - naveElegida.disparoTamaño && this.disparos[a].x + this.disparos[a].speedX < this.obstaculos[i].x + constantes.obstaculoUnoWidth && this.disparos[a].y + this.disparos[a].speedY > this.obstaculos[i].y - naveElegida.disparoTamaño && this.disparos[a].y + this.disparos[a].speedY < this.obstaculos[i].y + constantes.obstaculoUnoHeight){
                     this.disparos[a].x = -100;
                     this.disparos[a].y = -100;
                 };
@@ -210,14 +184,14 @@ export default class ComportamientoJuego{
         };
     };
 
-    colisionDisparoConEnemigo = (disparoHeight, disparoWidth, enemigos) =>{
+    colisionDisparoConEnemigo = (naveElegida) =>{
         for (let i = 0; i < this.disparos.length; i++) {
-            for (let a = 0; a < enemigos.length; a++) {
+            for (let a = 0; a < this.enemigos.length; a++) {
                 // CONTROLO LA COLISIÓN CON LOS ENEMIGOS
-                if ((this.disparos[i].y + this.disparos[i].speedY) <= enemigos[a].y + 50 && this.disparos[i].y + this.disparos[i].speedY + disparoHeight >= enemigos[a].y && this.disparos[i].x + this.disparos[i].speedX <= enemigos[a].x + 50 && this.disparos[i].x + this.disparos[i].speedX + disparoWidth >= enemigos[a].x) {
-                    enemigos[a].x = -100;
-                    enemigos[a].y = -100;
-                    enemigos[a].MovimientoX = 0;
+                if ((this.disparos[i].y + this.disparos[i].speedY) <= this.enemigos[a].y + 50 && this.disparos[i].y + this.disparos[i].speedY + naveElegida.disparoTamaño >= this.enemigos[a].y && this.disparos[i].x + this.disparos[i].speedX <= this.enemigos[a].x + 50 && this.disparos[i].x + this.disparos[i].speedX + naveElegida.disparoTamaño >= this.enemigos[a].x) {
+                    this.enemigos[a].x = -100;
+                    this.enemigos[a].y = -100;
+                    this.enemigos[a].MovimientoX = 0;
                     this.disparos[i].x = -100;
                     this.disparos[i].y = -100;
                     this.disparos[i].speedY = 0;
@@ -226,6 +200,48 @@ export default class ComportamientoJuego{
             }
             
         }
+    };
+
+    deteccionColisionVida = (naveElegida) => {
+        if (naveElegida.naveX + naveElegida.naveWidth > constantes.vidaRecogible.x && naveElegida.naveY < constantes.vidaRecogible.y + 30 && naveElegida.naveX < constantes.vidaRecogible.x + 30 && naveElegida.naveY + naveElegida.naveHeight > constantes.vidaRecogible.y) {
+            this.contador++;
+            constantes.vidaRecogible.x = -100;
+            constantes.vidaRecogible.y = -100;
+        };
+    };
+
+    //DISPARAR
+    disparar = (naveElegida) =>{ //CON CADA PULSACIÓN DE ESPACIO, GUARDO UN OBJETO DISPARO EN EL ARRAY. ESTO HACE QUE CADA DISPARO PUEDA FUNCIONAR DE MANERA INDEPENDIENTE
+        if(naveElegida.municion != 0){
+            this.sonidoDisparo.src = naveElegida.disparoSonido;
+            this.sonidoDisparo.currentTime = 0.25;
+            let disparo = {
+                x: naveElegida.naveX + naveElegida.naveWidth/2 - naveElegida.disparoTamaño/2,
+                y: naveElegida.naveY+ naveElegida.naveHeight/2 - naveElegida.disparoTamaño/2,//HACE QUE LOS DISPAROS SALGAN DESDE EL CENTRO DE LA NAVE
+                speedX: 0,
+                speedY: 0,
+                direccion: ""
+            }
+            if (this.haciaIzquierda) {
+                disparo.direccion = "izquierda";
+                this.velocidadX+=0.25;
+            }
+            if (this.haciaArriba) {
+                disparo.direccion = "arriba";
+                this.velocidadY+=0.25;
+            }
+            if (this.haciaDerecha) {
+                disparo.direccion = "derecha";
+                this.velocidadX-=0.25;
+            }
+            if (this.haciaAbajo) {
+                disparo.direccion = "abajo";
+                this.velocidadY-=0.25;
+            }
+            this.disparos.push(disparo);
+            naveElegida.municion--;
+            this.sonidoDisparo.play();
+        };
     };
 
 };
