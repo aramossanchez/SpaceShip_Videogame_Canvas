@@ -121,14 +121,6 @@ export default class ComportamientoJuego{
         }
     };
 
-    deteccionColisionEnemigos = (naveElegida) => {
-        for (let i = 0; i < this.enemigos.length; i++) {
-            if (naveElegida.naveX + naveElegida.naveWidth > this.enemigos[i].x && naveElegida.naveY < this.enemigos[i].y + 50 && naveElegida.naveX < this.enemigos[i].x + 50 && naveElegida.naveY + naveElegida.naveHeight > this.enemigos[i].y) {
-                controllerResetearNave.resetearNave(naveElegida, this.contador, this.inicializarNave());
-            };
-        }
-    };
-
     //DISPARAR
     disparar = (naveElegida) =>{ //CON CADA PULSACIÓN DE ESPACIO, GUARDO UN OBJETO DISPARO EN EL ARRAY. ESTO HACE QUE CADA DISPARO PUEDA FUNCIONAR DE MANERA INDEPENDIENTE
         if(naveElegida.municion != 0){

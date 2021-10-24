@@ -53,6 +53,9 @@ let controllerColisionDisparoObstaculo = new ColisionDisparoObstaculo();
 import ColisionNaveObstaculos from "./controllers/ColisionNaveObstaculos.js";
 let controllerColisionNaveObstaculos = new ColisionNaveObstaculos();
 
+import ColisionNaveEnemigo from "./controllers/ColisionNaveEnemigo.js";;
+let controllerColisionNaveEnemigo = new ColisionNaveEnemigo();
+
 import ResetearNave from "./controllers/ResetearNave.js";
 let controllerResetearNave = new ResetearNave();
 
@@ -226,7 +229,7 @@ const juego = () =>{
         naveElegida.naveX += comportamientoJuego.velocidadX;
     };
     if(naveElegida.naveX <= 0 + constantes.bordeIzquierdaWidth){
-        controllerResetearNave.resetearNave(naveElegida);
+        controllerResetearNave.resetearNave(naveElegida, comportamientoJuego.contador, comportamientoJuego);
     }
     //MOVIMIENTO HACIA ARRIBA
     if(arribaPulsado){
@@ -243,7 +246,7 @@ const juego = () =>{
         naveElegida.naveY += comportamientoJuego.velocidadY;
     };
     if(naveElegida.naveY <= 0 + constantes.bordeArribaHeight){
-        controllerResetearNave.resetearNave(naveElegida);
+        controllerResetearNave.resetearNave(naveElegida, comportamientoJuego.contador, comportamientoJuego);
     }
     //MOVIMIENTO HACIA DERECHA
     if(derechaPulsado){
@@ -260,7 +263,7 @@ const juego = () =>{
         naveElegida.naveX += comportamientoJuego.velocidadX;
     };
     if(naveElegida.naveX >= constantes.canvas.width - naveElegida.naveHeight - constantes.bordeDerechaWidth){
-        controllerResetearNave.resetearNave(naveElegida);
+        controllerResetearNave.resetearNave(naveElegida, comportamientoJuego.contador, comportamientoJuego);
     }
     //MOVIMIENTO HACIA ABAJO
     if(abajoPulsado){
@@ -277,13 +280,13 @@ const juego = () =>{
         naveElegida.naveY += comportamientoJuego.velocidadY;
     };
     if(naveElegida.naveY >= constantes.canvas.height - naveElegida.naveHeight - constantes.bordeAbajoHeight){
-        controllerResetearNave.resetearNave(naveElegida);
+        controllerResetearNave.resetearNave(naveElegida, comportamientoJuego.contador, comportamientoJuego);
     };
 
     //COLISIONES
     controllerColisionNaveObstaculos.deteccionColisionNave(naveElegida, comportamientoJuego.contador, comportamientoJuego.obstaculos, comportamientoJuego);
     controllerColisionDisparoObstaculo.deteccionColisionDisparos(naveElegida, comportamientoJuego.obstaculos, comportamientoJuego.disparos, comportamientoJuego);
-    comportamientoJuego.deteccionColisionEnemigos(naveElegida);
+    controllerColisionNaveEnemigo.deteccionColisionEnemigos(naveElegida, comportamientoJuego.enemigos, comportamientoJuego.contador, comportamientoJuego);
     controllerColisionDisparoEnemigo.colisionDisparoConEnemigo(naveElegida, comportamientoJuego.disparos, comportamientoJuego.enemigos, comportamientoJuego);
     controllerColisionNaveVida.deteccionColisionVida(naveElegida, comportamientoJuego, drawerVidaRecogible.vidaRecogible);
 

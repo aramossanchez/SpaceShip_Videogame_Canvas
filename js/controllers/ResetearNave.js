@@ -4,7 +4,7 @@ export default class ResetearNave {
         objeto.inicializarNave();
         naveElegida.naveX = 50;
         naveElegida.naveY = 550;
-        if (contador < 0) {
+        if (contador <= 0) {
             window.location.reload();
         };
     };
