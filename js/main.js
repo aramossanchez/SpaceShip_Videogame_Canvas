@@ -13,6 +13,9 @@ import ComportamientoJuego from "./ComportamientoJuego.js";
 let comportamientoJuego = new ComportamientoJuego();
 
 //IMPORTO DRAWERS
+import PintarNave from "./drawers/PintarNave.js";
+let drawerNave = new PintarNave();
+
 import PintarBordes from "./drawers/PintarBordes.js";
 let drawerBordes = new PintarBordes();
 
@@ -146,7 +149,7 @@ const juego = () =>{
     naveDerecha.src = naveElegida.imagenDerecha;
 
     //PINTAMOS NAVE
-    comportamientoJuego.pintarNave(naveElegida, naveArriba, naveAbajo, naveIzquierda, naveDerecha);
+    drawerNave.pintarNave(naveElegida, naveArriba, naveAbajo, naveIzquierda, naveDerecha, comportamientoJuego.haciaIzquierda, comportamientoJuego.haciaArriba, comportamientoJuego.haciaDerecha, comportamientoJuego.haciaAbajo);
     
     //PINTAMOS BORDES
     drawerBordes.pintarBordes();
