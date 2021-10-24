@@ -19,6 +19,9 @@ let drawerNave = new PintarNave();
 import PintarBordes from "./drawers/PintarBordes.js";
 let drawerBordes = new PintarBordes();
 
+import PintarEnemigos from "./drawers/PIntarEnemigos.js";
+let drawerEnemigos = new PintarEnemigos();
+
 import PintarContador from "./drawers/PintarContador.js";
 let drawerContador = new PintarContador();
 
@@ -170,7 +173,7 @@ const juego = () =>{
     comportamientoJuego.pintarDisparo(naveElegida);
     
     //PINTAMOS ENEMIGOS
-    comportamientoJuego.pintarEnemigos();
+    drawerEnemigos.pintarEnemigos(comportamientoJuego.enemigo, comportamientoJuego.enemigos);
     
     //PINTAMOS VIDA EN EL MAPA
     drawerVidaRecogible.pintarVidaRecogible();
