@@ -44,6 +44,12 @@ let controllerGanarJuego = new GanarJuego();
 import ColisionNaveVida from "./controllers/ColisionNaveVida.js";
 let controllerColisionNaveVida = new ColisionNaveVida;
 
+import ColisionDisparoEnemigo from "./controllers/ColisionDisparoEnemigo.js";
+let controllerColisionDisparoEnemigo = new ColisionDisparoEnemigo();
+
+import ColisionDisparoObstaculo from "./controllers/ColisionDisparoObstaculo.js";
+let controllerColisionDisparoObstaculo = new ColisionDisparoObstaculo();
+
 //MUESTRO TODAS LAS NAVES EN LA PANTALLA DE SELECCIÓN
 for (let i = 0; i < constantes.navesPosibles.length; i++) {
     document.getElementById(`nave${i}`).innerHTML = `<div><span>Name:</span> ${constantes.navesPosibles[i][0]}</div><img src="${constantes.navesPosibles[i][12]}"><div><span>Aceleration:</span> ${constantes.navesPosibles[i][5]*100}</div><div><span>Max Speed:</span> ${constantes.navesPosibles[i][4]*100}</div>`;
@@ -270,11 +276,10 @@ const juego = () =>{
 
     //COLISIONES
     comportamientoJuego.deteccionColisionNave(naveElegida);
-    comportamientoJuego.deteccionColisionDisparos(naveElegida);
+    controllerColisionDisparoObstaculo.deteccionColisionDisparos(naveElegida, comportamientoJuego.obstaculos, comportamientoJuego.disparos, comportamientoJuego);
     comportamientoJuego.deteccionColisionEnemigos(naveElegida);
-    comportamientoJuego.colisionDisparoConEnemigo(naveElegida);
+    controllerColisionDisparoEnemigo.colisionDisparoConEnemigo(naveElegida, comportamientoJuego.disparos, comportamientoJuego.enemigos, comportamientoJuego);
     controllerColisionNaveVida.deteccionColisionVida(naveElegida, comportamientoJuego, drawerVidaRecogible.vidaRecogible);
-    console.log(comportamientoJuego.contador);
 
     //GANAMOS JUEGO
     controllerGanarJuego.ganarJuego(naveElegida);

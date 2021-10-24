@@ -39,7 +39,20 @@ export default class ComportamientoJuego{
 
     aumentarContador(){
         this.contador += 1;
-    }
+    };
+
+    eliminarEnemigos(posicion){
+        this.enemigos[posicion].x = -100;
+        this.enemigos[posicion].y = -100;
+        this.enemigos[posicion].MovimientoX = -100;
+    };
+    
+    eliminarDisparos(posicion){
+        this.disparos[posicion].x = -100;
+        this.disparos[posicion].y = -100;
+        this.disparos[posicion].speedX = -100;
+        this.disparos[posicion].speedY = -100;
+    };
 
     //PINTAR EN EL LIENZO
     pintarObstaculos = () =>{
@@ -63,7 +76,6 @@ export default class ComportamientoJuego{
     };
 
     pintarDisparo = (naveElegida) =>{
-        
         this.imagenDisparo.src = naveElegida.disparo;
         // RECORRO EL ARRAY DE DISPAROS CUANDO NO ESTÁ VACIO Y PINTO TODOS LOS this.DISPAROS LANZADOS
         if (this.disparos.length != 0) {
@@ -92,15 +104,6 @@ export default class ComportamientoJuego{
                     };
                 }
             }
-        }
-    };
-
-    pintarEnemigos = () => {
-        for (let i = 0; i < this.enemigos.length; i++) {
-            constantes.contexto.beginPath();
-            constantes.contexto.drawImage(this.enemigo, this.enemigos[i].x, this.enemigos[i].y, 50, 50);
-            constantes.contexto.fill();    
-            constantes.contexto.closePath();        
         }
     };
     
@@ -134,34 +137,6 @@ export default class ComportamientoJuego{
                 this.resetearNave(naveElegida);
             };
         }
-    };
-
-    deteccionColisionDisparos = (naveElegida) => {
-        for (let i = 0; i < this.obstaculos.length; i++) {// RECORRO EL ARRAY DE OBSTACULOS
-            for (let a = 0; a < this.disparos.length; a++) {// RECORRO EL ARRAY DE DISPAROS            
-                if(this.disparos[a].x + this.disparos[a].speedX > this.obstaculos[i].x - naveElegida.disparoTamaño && this.disparos[a].x + this.disparos[a].speedX < this.obstaculos[i].x + constantes.obstaculoUnoWidth && this.disparos[a].y + this.disparos[a].speedY > this.obstaculos[i].y - naveElegida.disparoTamaño && this.disparos[a].y + this.disparos[a].speedY < this.obstaculos[i].y + constantes.obstaculoUnoHeight){
-                    this.disparos[a].x = -100;
-                    this.disparos[a].y = -100;
-                };
-            };
-        };
-    };
-
-    colisionDisparoConEnemigo = (naveElegida) =>{
-        for (let i = 0; i < this.disparos.length; i++) {
-            for (let a = 0; a < this.enemigos.length; a++) {
-                // CONTROLO LA COLISIÓN CON LOS ENEMIGOS
-                if ((this.disparos[i].y + this.disparos[i].speedY) <= this.enemigos[a].y + 50 && this.disparos[i].y + this.disparos[i].speedY + naveElegida.disparoTamaño >= this.enemigos[a].y && this.disparos[i].x + this.disparos[i].speedX <= this.enemigos[a].x + 50 && this.disparos[i].x + this.disparos[i].speedX + naveElegida.disparoTamaño >= this.enemigos[a].x) {
-                    this.enemigos[a].x = -100;
-                    this.enemigos[a].y = -100;
-                    this.enemigos[a].MovimientoX = 0;
-                    this.disparos[i].x = -100;
-                    this.disparos[i].y = -100;
-                    this.disparos[i].speedY = 0;
-                    this.disparos[i].speedX = 0;
-                };
-            };
-        };
     };
 
     //DISPARAR
