@@ -25,16 +25,22 @@ export default class PintarMunicion {
             this.municionTotal[i] = municion;
             this.marginRight += tamañoCadaMunicion;
         };
-        console.log(this.municionTotal)
-        constantes.contexto.beginPath();
         for (let a = 0; a < this.municionTotal.length; a++) {
             if(this.municionTotal[a].Disparado == "no"){
+                constantes.contexto.beginPath();
                 constantes.contexto.rect(this.municionTotal[a].x, this.municionTotal[a].y, this.width, 20);
                 constantes.contexto.fillStyle = "#00FF00";
                 constantes.contexto.fill();
+                constantes.contexto.closePath();
+            };
+            if(this.municionTotal[a].Disparado == "si"){
+                constantes.contexto.beginPath();
+                constantes.contexto.strokeRect(this.municionTotal[a].x, this.municionTotal[a].y, this.width, 20);
+                constantes.contexto.strokeStyle = "#00FF00";
+                constantes.contexto.fill();
+                constantes.contexto.closePath();
             };
         };
-        constantes.contexto.closePath();
     };
 
-}
+};
