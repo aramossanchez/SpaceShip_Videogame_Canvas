@@ -12,9 +12,6 @@ export default class PintarMunicion {
 
     pintarMunicion = (naveElegida, municionNave) => {
         this.marginRight = 0;
-        // constantes.contexto.font = "30px Arial";
-        // constantes.contexto.fillStyle = "#FFBD00";
-        // constantes.contexto.fillText((naveElegida.municion != 0) ? `Municion: ${ naveElegida.municion}/${municionNave}`: "¡RECARGA!", 1100, 50);
         let tamañoCadaMunicion = ((constantes.canvas.width - 10) - this.posicionInicial)/municionNave;
         this.width = tamañoCadaMunicion - 10;
         for (let i = 0; i < municionNave; i++) {
@@ -26,19 +23,26 @@ export default class PintarMunicion {
             this.marginRight += tamañoCadaMunicion;
         };
         for (let a = 0; a < this.municionTotal.length; a++) {
-            if(this.municionTotal[a].Disparado == "no"){
-                constantes.contexto.beginPath();
-                constantes.contexto.rect(this.municionTotal[a].x, this.municionTotal[a].y, this.width, 20);
-                constantes.contexto.fillStyle = "#00FF00";
-                constantes.contexto.fill();
-                constantes.contexto.closePath();
+            if (naveElegida.municion != 0) {
+                if(this.municionTotal[a].Disparado == "no"){
+                    constantes.contexto.beginPath();
+                    constantes.contexto.rect(this.municionTotal[a].x, this.municionTotal[a].y, this.width, 20);
+                    constantes.contexto.fillStyle = "#00FF00";
+                    constantes.contexto.fill();
+                    constantes.contexto.closePath();
+                };
+                if(this.municionTotal[a].Disparado == "si"){
+                    constantes.contexto.beginPath();
+                    constantes.contexto.strokeRect(this.municionTotal[a].x, this.municionTotal[a].y, this.width, 20);
+                    constantes.contexto.strokeStyle = "#00FF00";
+                    constantes.contexto.fill();
+                    constantes.contexto.closePath();
+                };
             };
-            if(this.municionTotal[a].Disparado == "si"){
-                constantes.contexto.beginPath();
-                constantes.contexto.strokeRect(this.municionTotal[a].x, this.municionTotal[a].y, this.width, 20);
-                constantes.contexto.strokeStyle = "#00FF00";
-                constantes.contexto.fill();
-                constantes.contexto.closePath();
+            if (naveElegida.municion == 0) {
+                constantes.contexto.font = "30px Arial";
+                constantes.contexto.fillStyle = "#00FF00";
+                constantes.contexto.fillText("RELOAD!", 1100, 50);        
             };
         };
     };
